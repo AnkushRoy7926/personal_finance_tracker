@@ -25,7 +25,11 @@ const fetchQuote = async () => {
     setQuote(data.quote);
     setAuthor(data.author);
   } catch (error) {
-    console.error(error.message);
+    if (error instanceof Error) {
+      console.error(error.message);
+    } else {
+      console.error(String(error));
+    }
   } finally {
     setLoading(false);
   }
