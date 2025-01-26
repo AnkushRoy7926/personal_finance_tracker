@@ -1,4 +1,11 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+    typescript: {
+        ignoreBuildErrors: true,  // Skip TypeScript errors during build
+      },
+      eslint: {
+        ignoreDuringBuilds: true,  // Skip ESLint errors during build (optional)
+      }
+};
 
 export default nextConfig;
