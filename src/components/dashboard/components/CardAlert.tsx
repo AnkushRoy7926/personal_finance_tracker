@@ -53,7 +53,7 @@ return (
       ) : (
         <Typography variant="body2" sx={{ mb: 0, color: 'text.secondary' }}>
           {quote}<br /><br />
-          {`- ${author}`}
+          {`${author}`}
         </Typography>
       )}
     </CardContent>
