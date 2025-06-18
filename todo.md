@@ -1,0 +1,3 @@
+- ADD LOADING ANIMATION
+- Take Name of person, during login/allow login to put name.
+- fix dashboard

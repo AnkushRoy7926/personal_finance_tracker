@@ -32,6 +32,23 @@ function getDaysInMonth(month: number, year: number) {
   return days;
 }
 
+function getLastNDaysLabels(n: number): string[] {
+  const days: string[] = [];
+  const today = new Date();
+
+  for (let i = n - 1; i >= 0; i--) {
+    const date = new Date();
+    date.setDate(today.getDate() - i);
+    const label = date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+    });
+    days.push(label); // e.g., "Jun 1", "Jun 2"
+  }
+
+  return days;
+}
+
 function AreaGradient({ color, id }: { color: string; id: string }) {
   return (
     <defs>
@@ -51,7 +68,8 @@ export default function StatCard({
   data,
 }: StatCardProps) {
   const theme = useTheme();
-  const daysInWeek = getDaysInMonth(4, 2024);
+  const xAxisLabels = getLastNDaysLabels(30);
+
 
   const trendColors = {
     up:
@@ -76,7 +94,8 @@ export default function StatCard({
 
   const color = labelColors[trend];
   const chartColor = trendColors[trend];
-  const trendValues = { up: '+25%', down: '-25%', neutral: '+5%' };
+  // const trendValues = { up: '', down: '', neutral: '' };
+  // const trendValues = { up: '+25%', down: '-25%', neutral: '+5%' };
 
   return (
     <Card variant="outlined" sx={{ height: '100%', flexGrow: 1 }}>
@@ -96,7 +115,7 @@ export default function StatCard({
               <Typography variant="h4" component="p">
                 {value}
               </Typography>
-              <Chip size="small" color={color} label={trendValues[trend]} />
+              {/* <Chip size="small" color={color} label={trendValues[trend]} /> */}
             </Stack>
             <Typography variant="caption" sx={{ color: 'text.secondary' }}>
               {interval}
@@ -111,7 +130,7 @@ export default function StatCard({
               showTooltip
               xAxis={{
                 scaleType: 'band',
-                data: daysInWeek, // Use the correct property 'data' for xAxis
+                data: xAxisLabels, // Use the correct property 'data' for xAxis
               }}
               sx={{
                 [`& .${areaElementClasses.root}`]: {

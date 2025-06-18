@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useState } from "react";
+import { JSX, useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/navigation";
-import { auth } from "@/firebaseConfig";
+import { auth } from "@src/firebaseConfig";
 
-const withAuth = (WrappedComponent) => {
+const withAuth = (WrappedComponent: React.ComponentType<any>) => {
   return (props) => {
     const [loading, setLoading] = useState(true);
     const router = useRouter();

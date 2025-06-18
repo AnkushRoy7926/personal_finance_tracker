@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, setPersistence, browserLocalPersistence } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
 // Load environment variables from .env.local
 const firebaseConfig = {
@@ -9,16 +10,17 @@ const firebaseConfig = {
   storageBucket: process.env.NEXT_PUBLIC_FBstorageBucket,
   messagingSenderId: process.env.NEXT_PUBLIC_FBmessagingSenderId,
   appId: process.env.NEXT_PUBLIC_FBappId,
-  measurementId: process.env.NEXT_PUBLIC_FBmeasurementId,
+  // measurementId: process.env.NEXT_PUBLIC_FBmeasurementId,
 };
 
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
 const auth = getAuth(firebaseApp);
+const db = getFirestore(firebaseApp);
 
 // Ensure session persists across tabs and browser restarts
 setPersistence(auth, browserLocalPersistence).catch((error) => {
   console.error("Error setting persistence:", error);
 });
 
-export { auth };
+export {db, firebaseApp, auth };

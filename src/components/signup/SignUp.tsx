@@ -1,10 +1,10 @@
 'use client';
 
 import * as React from 'react';
-import { auth } from '../../firebaseConfig';
+import { auth, db } from '../../firebaseConfig';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-
 import { GoogleAuthProvider, GithubAuthProvider, signInWithPopup, AuthProvider } from 'firebase/auth';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 
 
 import Box from '@mui/material/Box';
@@ -66,9 +66,45 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
         'radial-gradient(at 50% 50%, hsla(210, 100%, 16%, 0.5), hsl(220, 30%, 5%))',
       }),
     },
-  }));
+}));
 
-  
+function getTodayDateString(): string {
+  const today = new Date();
+  return today.toISOString().split('T')[0]; // e.g., "2025-06-18"
+}
+
+async function createUserProfile(email: string, name: string, uid: string) {
+  const userRef = doc(db, 'users', uid);
+
+  // Create user doc
+  await setDoc(userRef, {
+    name,
+    email,
+    createdAt: serverTimestamp(),
+  });
+
+  // Initialize with a default transaction (e.g., welcome bonus)
+  const txnId = 'initial';
+  const initialAmount = 0;
+
+  const txnRef = doc(db, 'users', uid, 'transactions', txnId);
+  await setDoc(txnRef, {
+    amount: initialAmount,
+    timestamp: serverTimestamp(),
+  });
+
+  // Initialize dailyStats for today
+  const today = getTodayDateString();
+  const statsRef = doc(db, 'users', uid, 'dailyStats', today);
+
+  await setDoc(statsRef, {
+    date: today,
+    added: initialAmount,
+    spent: 0,
+    balance: initialAmount,
+  });
+}
+
   
   export default function SignUp(props: { disableCustomTheme?: boolean }) {
     const [emailError, setEmailError] = React.useState(false);
@@ -129,9 +165,15 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
     const password = data.get('password') as string;
     
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const userCred = await createUserWithEmailAndPassword(auth, email, password);
       console.log('User signed up successfully');
+
+      const user = userCred.user;
+      await createUserProfile(email, data.get('name') as string, user.uid);
+      console.log('User profile created successfully');
+      
       router.push('/login');
+
     } catch (error) {
       console.error('Error signing up:', error);
     }
@@ -144,6 +186,11 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
       try {
         const result = await signInWithPopup(auth, googleProvider);
         console.log('User signed up with Google:', result.user);
+
+        const user = result.user;
+        await createUserProfile(user.email as string, user.displayName ?? "Random User", user.uid);
+        console.log('User profile created successfully');
+        
         router.push('/login');
       } catch (error) {
         console.error('Error signing up with Google:', error);
@@ -219,7 +266,7 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
                 placeholder="•••••••••"
                 type="password"
                 id="password"
-                autoComplete="new-password"
+                // autoComplete="new-password"
                 variant="outlined"
                 error={passwordError}
                 helperText={passwordErrorMessage}
