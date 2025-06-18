@@ -43,7 +43,7 @@ export default function AppNavbar() {
         boxShadow: 0,
         bgcolor: 'background.paper',
         backgroundImage: 'none',
-        borderBottom: '10px solid',
+        borderBottom: '1px solid',
         borderColor: 'divider',
         top: 'var(--template-frame-height, 0px)',
       }}
