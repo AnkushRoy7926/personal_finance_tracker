@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Avatar from '@mui/material/Avatar';
@@ -10,6 +12,7 @@ import SelectContent from './SelectContent';
 import MenuContent from './MenuContent';
 import CardAlert from './CardAlert';
 import OptionsMenu from './OptionsMenu';
+import { fetchUserName } from '@src/utils/fetchName';
 
 const drawerWidth = 240;
 
@@ -25,8 +28,16 @@ const Drawer = styled(MuiDrawer)({
 });
 
 export default function SideMenu() {
-  
-  
+  const [name, setName] = React.useState<string>('User');
+
+  React.useEffect(() => {
+    const getName = async () => {
+      const fetchedName = await fetchUserName();
+      if (fetchedName) setName(fetchedName);
+    };
+    getName();
+  }, []);
+
   return (
     <Drawer
       variant="permanent"
@@ -70,17 +81,13 @@ export default function SideMenu() {
       >
         <Avatar
           sizes="small"
-          alt="Kaz Brekker"
-          // src="/static/images/avatar/7.jpg"
+          alt={name}
           sx={{ width: 36, height: 36 }}
         />
         <Box sx={{ mr: 'auto' }}>
           <Typography variant="body2" sx={{ fontWeight: 500, lineHeight: '16px' }}>
-            Kaz Brekker
+            {name}
           </Typography>
-          {/* <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            kazbrekker7926
-          </Typography> */}
         </Box>
         <OptionsMenu />
       </Stack>

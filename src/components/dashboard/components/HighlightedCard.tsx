@@ -13,13 +13,14 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import { addTransaction } from '@src/utils/transaction';
+import { addTransactionAndUpdateStats } from '@src/utils/transaction';
 import { auth } from '@src/firebaseConfig';
+import { useRouter } from 'next/navigation';
 
 export default function TransactionCard() {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-
+  const router = useRouter();
   const [type, setType] = React.useState<'Saving' | 'Spent'>('Saving');
   const [mode, setMode] = React.useState<'UPI' | 'Cash'>('UPI');
   const [amount, setAmount] = React.useState<number | ''>('');
@@ -31,14 +32,13 @@ export default function TransactionCard() {
       return;
     }
     console.log(`Transaction: ${type}, Mode: ${mode}, Amount: ₹${amount}`);
-    await addTransaction(auth.currentUser?.uid || '', {
+    await addTransactionAndUpdateStats(auth.currentUser?.uid || '', {
       amount,
       type,
       mode,
       description: description.trim() || undefined,
     });
-
-
+    router.refresh();
   };
 
   return (

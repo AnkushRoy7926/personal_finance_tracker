@@ -10,8 +10,12 @@ import {
 } from 'firebase/firestore';
 
 export interface Transaction {
+  id: string, 
   amount: number;
+  description?: string;
+  mode: 'UPI' | 'Cash';
   timestamp: Timestamp;
+  type: 'Saving' | 'Spent'; // Match casing from Firestore
 }
 
 export interface DailyStat {
@@ -32,21 +36,11 @@ function formatDate(d: Date): string {
 }
 
 export async function fetchUserSummary(uid: string) {
-  const transactions: Transaction[] = [];
+
   const dailyStatsMap = new Map<string, DailyStat>();
 
   try {
-    // 1. Last 30 transactions
-    const txnRef = collection(db, 'users', uid, 'transactions');
-    const txnQuery = query(txnRef, orderBy('timestamp', 'desc'), limit(30));
-    const txnSnap = await getDocs(txnQuery);
-    txnSnap.forEach(doc => {
-      const data = doc.data();
-      transactions.push({
-        amount: data.amount,
-        timestamp: data.timestamp,
-      });
-    });
+    
 
     // 2. Get all entries from last 30 days
     const thresholdDate = formatDate(getDateNDaysAgo(30));
@@ -93,13 +87,42 @@ export async function fetchUserSummary(uid: string) {
 
 
     return {
-      transactions,
+      // transactions,
       dailyStats,
       latestBalance,
     };
 
   } catch (error) {
     console.error('Error fetching user summary:', error);
+    throw error;
+  }
+}
+
+export async function transactionDetails(uid: string) {
+  const transactions: Transaction[] = [];
+
+  try {
+
+    // 1. Last 30 transactions
+    const txnRef = collection(db, 'users', uid, 'transactions');
+    const txnQuery = query(txnRef, orderBy('timestamp', 'desc'), limit(30));
+    const txnSnap = await getDocs(txnQuery);
+    txnSnap.forEach(doc => {
+      const data = doc.data();
+      transactions.push({
+        id: doc.id,
+        amount: data.amount,
+        timestamp: data.timestamp,
+        type: data.type, // 'Saving' or 'Spent'
+        mode: data.mode, // 'UPI' or 'Cash'
+        description: data.description || '',
+      });
+    });
+
+  return transactions;
+  }
+  catch (error) {
+    console.error('Error fetching transaction details:', error);
     throw error;
   }
 }

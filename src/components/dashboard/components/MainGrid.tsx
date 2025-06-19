@@ -30,15 +30,11 @@ export default function MainGrid() {
   
   
     if (uid) {
-      const { transactions, dailyStats, latestBalance } = await fetchUserSummary(uid);
-      console.log({ transactions, dailyStats, latestBalance });
-      // Sort dailyStats in ascending order by date
+      const { dailyStats, latestBalance } = await fetchUserSummary(uid);
       const { added, spent, balance } = extractStatsAscending(dailyStats);
       console.log('Sorted Daily Stats:', { added, spent, balance });
-      return {transactions, latestBalance, added, spent, balance };
+      return {latestBalance, added, spent, balance };
     }
-
-
   }
 
   
@@ -47,7 +43,7 @@ export default function MainGrid() {
 
         const result = await getData();
         // if (result) {
-        //   const {transactions, latestBalance, added, spent, balance } = result;
+        //   const {latestBalance, added, spent, balance } = result;
         // }
 
 
