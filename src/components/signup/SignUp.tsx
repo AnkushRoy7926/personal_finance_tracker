@@ -80,6 +80,9 @@ async function createUserProfile(email: string, name: string, uid: string) {
   await setDoc(userRef, {
     name,
     email,
+    upi: 0,
+    cash: 0,
+    totalBalance: 0,
     createdAt: serverTimestamp(),
   });
 
