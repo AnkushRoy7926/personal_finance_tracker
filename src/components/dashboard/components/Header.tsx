@@ -27,7 +27,7 @@ export default function Header() {
         <Search />
         <StaticDateDisplay />
         <MenuButton showBadge aria-label="Open notifications">
-          <NotificationsRoundedIcon />
+          {/* <NotificationsRoundedIcon /> */}
         </MenuButton>
         <ColorModeIconDropdown />
       </Stack>

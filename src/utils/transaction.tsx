@@ -14,7 +14,10 @@ interface TransactionInput {
   type: 'Saving' | 'Spent';
   mode: 'UPI' | 'Cash';
   description?: string;
+  day: string;
+
 }
+
 
 /**
  * Atomically adds a transaction and updates that day's stats and user summary.
@@ -38,7 +41,7 @@ export async function addTransactionAndUpdateStats(
       cash: rawUser.cash ?? 0,
     };
 
-    // 2) Read (or init) that day’s stats BEFORE any writes
+    // 2) Read that day’s stats BEFORE any writes
     const statsRef = doc(userRef, 'dailyStats', dateStr);
     const statsSnap = await tx.get(statsRef);
     const rawStats = statsSnap.exists() ? statsSnap.data() : {};
@@ -58,9 +61,9 @@ export async function addTransactionAndUpdateStats(
 
     const added = prev.added + (amount > 0 ? amount : 0);
     const spent = prev.spent + (amount < 0 ? Math.abs(amount) : 0);
-    const balance = prev.balance + amount;
-    const newDailyUPI = mode === 'UPI' ? prev.upi + amount : prev.upi;
-    const newDailyCash = mode === 'Cash' ? prev.cash + amount : prev.cash;
+    // const balance = prev.balance + amount;
+    // const newDailyUPI = mode === 'UPI' ? prev.upi + amount : prev.upi;
+    // const newDailyCash = mode === 'Cash' ? prev.cash + amount : prev.cash;
 
     // 4) Perform writes
     tx.update(userRef, {
@@ -71,10 +74,11 @@ export async function addTransactionAndUpdateStats(
 
     const txnRef = doc(collection(userRef, 'transactions'));
     tx.set(txnRef, {
-      amount,
+      amount: Math.abs(amount),
       type,
       mode,
       description: description || null,
+      day: now.toLocaleDateString('en-US', { weekday: 'long' }), 
       timestamp: serverTimestamp(),
     });
 
@@ -82,9 +86,9 @@ export async function addTransactionAndUpdateStats(
       date: dateStr,
       added,
       spent,
-      balance,
-      upi: newDailyUPI,
-      cash: newDailyCash,
+      balance: newTotalBalance,
+      upi: newUPI,
+      cash: newCash,
     });
   });
 }
@@ -104,11 +108,18 @@ export async function deleteTransactionAndUpdateStats(
     const txnSnap = await tx.get(txnRef);
     if (!txnSnap.exists()) return;
 
-    const { amount, timestamp, mode } = txnSnap.data() as {
+    let { amount, timestamp, mode, type } = txnSnap.data() as {
       amount: number;
       timestamp: Timestamp;
       mode: 'UPI' | 'Cash';
+      type: 'Saving' | 'Spent';
     };
+
+    if (type === 'Spent') {
+      amount = -Math.abs(amount); // Ensure spent amounts are negative
+    } else {
+      amount = Math.abs(amount); // Saving amounts are positive
+    }
 
     const dateStr = timestamp.toDate().toISOString().split('T')[0];
     const statsRef = doc(userRef, 'dailyStats', dateStr);

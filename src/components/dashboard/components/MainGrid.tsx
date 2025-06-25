@@ -37,6 +37,8 @@ export default function MainGrid() {
     }
   }
 
+  const [dataWhole, setDataWhole] = React.useState();
+
   
   React.useEffect(() => {
     const fetchData = async () => {

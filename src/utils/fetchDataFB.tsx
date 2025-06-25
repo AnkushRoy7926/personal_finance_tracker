@@ -7,6 +7,8 @@ import {
   limit,
   Timestamp,
   where,
+  doc,
+  getDoc,
 } from 'firebase/firestore';
 
 export interface Transaction {
@@ -15,7 +17,10 @@ export interface Transaction {
   description?: string;
   mode: 'UPI' | 'Cash';
   timestamp: Timestamp;
-  type: 'Saving' | 'Spent'; // Match casing from Firestore
+  type: 'Saving' | 'Spent'; 
+  cash?: number,
+  upi?: number,
+  day:string
 }
 
 export interface DailyStat {
@@ -23,6 +28,8 @@ export interface DailyStat {
   added: number;
   spent: number;
   balance: number;
+  upi: number;
+  cash: number;
 }
 
 function getDateNDaysAgo(n: number): Date {
@@ -40,9 +47,8 @@ export async function fetchUserSummary(uid: string) {
   const dailyStatsMap = new Map<string, DailyStat>();
 
   try {
-    
 
-    // 2. Get all entries from last 30 days
+    // Get all entries from last 30 days
     const thresholdDate = formatDate(getDateNDaysAgo(30));
     const statsRef = collection(db, 'users', uid, 'dailyStats');
     const statsQuery = query(
@@ -58,18 +64,24 @@ export async function fetchUserSummary(uid: string) {
         added: data.added,
         spent: data.spent,
         balance: data.balance,
+        upi: data.upi,
+        cash: data.cash
       });
     });
 
     // 3. Fill in missing days, pad to today
     var dailyStats: DailyStat[] = [];
     let lastBalance = 0;
+    let lastCash = 0;
+    let lastUPI = 0;
 
     for (let i = 30; i >= 0; i--) {
       const dateStr = formatDate(getDateNDaysAgo(i));
       const stat = dailyStatsMap.get(dateStr);
       if (stat) {
         lastBalance = stat.balance;
+        lastCash = stat.cash;
+        lastUPI = stat.upi;
         dailyStats.push(stat);
       } else {
         dailyStats.push({
@@ -77,19 +89,32 @@ export async function fetchUserSummary(uid: string) {
           added: 0,
           spent: 0,
           balance: lastBalance,
+          upi: lastUPI,
+          cash: lastCash,
         });
       }
     }
 
     // 4. latestBalance = today's balance (last in list)
     const latestBalance = dailyStats[dailyStats.length - 1]?.balance ?? 0;
+    const latestCash = dailyStats[dailyStats.length - 1]?.cash ?? 0;
+    const latestUPI = dailyStats[dailyStats.length - 1]?.upi ?? 0;
     dailyStats = dailyStats.slice(1); // removes the oldest, keeps last 30
 
+    // const userRef = doc(db, 'users', uid);
+    //   const docSnap = await getDoc(userRef);
+    
+    // if (docSnap.exists()) {
+    //   const data = docSnap.data();
+    // }
+    
 
     return {
       // transactions,
       dailyStats,
       latestBalance,
+      latestCash,
+      latestUPI
     };
 
   } catch (error) {
@@ -116,6 +141,7 @@ export async function transactionDetails(uid: string) {
         type: data.type, // 'Saving' or 'Spent'
         mode: data.mode, // 'UPI' or 'Cash'
         description: data.description || '',
+        day: data.day
       });
     });
 
@@ -135,6 +161,8 @@ export function extractStatsAscending(
     added: number[];
     spent: number[];
     balance: number[];
+    cash: number[];
+    upi: number[];
   } {
     // Sort by date ASC
     const sorted = [...dailyStats].sort((a, b) =>
@@ -145,14 +173,17 @@ export function extractStatsAscending(
     const added: number[] = [];
     const spent: number[] = [];
     const balance: number[] = [];
+    const cash: number[] = [];
+    const upi: number[] = [];
   
     for (const stat of sorted) {
       dates.push(stat.date);
       added.push(stat.added);
       spent.push(stat.spent);
       balance.push(stat.balance);
+      cash.push(stat.cash);
+      upi.push(stat.upi);
     }
   
-    return { added, spent, balance };
-  }
-  
+    return { added, spent, balance, cash, upi };
+ }

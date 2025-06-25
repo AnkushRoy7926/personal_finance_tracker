@@ -26,7 +26,8 @@ interface TransactionRow {
   type: 'Saving' | 'Spent';
   mode: 'UPI' | 'Cash';
   description: string;
-  timestamp: string;
+  timestamp: Date;
+  day: string;
 }
 
 function renderStatus(status: 'UPI' | 'Cash' | 'Saving' | 'Spent') {
@@ -56,7 +57,12 @@ export default function CustomizedDataGrid() {
           type: txn.type,
           mode: txn.mode,
           description: txn.description || '—',
-          timestamp: txn.timestamp.toDate().toLocaleString(),
+          timestamp: txn.timestamp.toDate() || null,
+          day: txn.timestamp.toDate().toLocaleDateString('en-GB', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric',
+          }) + " " + txn.day,
         }))
       );
     })();
@@ -73,7 +79,7 @@ export default function CustomizedDataGrid() {
   const columns: GridColDef[] = [
     {
       field: 'serial',
-      headerName: '#',
+      headerName: 'No.',
       width: 60,
       sortable: false,
       filterable: false,
@@ -95,20 +101,32 @@ export default function CustomizedDataGrid() {
       renderCell: (params) => renderStatus(params.value as any),
     },
     { field: 'description', headerName: 'Description', flex: 2 },
-    { field: 'timestamp', headerName: 'Timestamp', flex: 1.5 },
+
+    { field: 'day', headerName: 'Date', flex: 1.5},
     {
       field: 'actions',
       type: 'actions',
       headerName: '',
       width: 60,
-      getActions: (params) => [
-        <GridActionsCellItem
-          icon={<DeleteOutlineIcon />}
-          label="Delete"
-          onClick={() => handleDeleteRow(params.id as string)}
-          color="error"
-        />,
-      ],
+      getActions: (params) => {
+        const txnDate = new Date(params.row.timestamp);
+        const today = new Date();
+        const isSameDay =
+          txnDate.getFullYear() === today.getFullYear() &&
+          txnDate.getMonth() === today.getMonth() &&
+          txnDate.getDate() === today.getDate();
+      
+        if (!isSameDay) return []; // 🔒 No delete icon for old transactions
+      
+        return [
+          <GridActionsCellItem
+            icon={<DeleteOutlineIcon />}
+            label="Delete"
+            onClick={() => handleDeleteRow(params.id as string)}
+            color="error"
+          />,
+        ];
+      }
     },
   ];
 
@@ -117,6 +135,7 @@ export default function CustomizedDataGrid() {
       <DataGrid
         rows={rows}
         columns={columns}
+        rowHeight={65}
         checkboxSelection
         rowSelectionModel={selectionModel}
         onRowSelectionModelChange={(newModel) =>

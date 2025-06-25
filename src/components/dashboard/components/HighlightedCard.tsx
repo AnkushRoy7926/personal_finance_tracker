@@ -31,9 +31,13 @@ export default function TransactionCard() {
       alert('Please enter a valid amount.');
       return;
     }
+    let validAmount = Math.abs(amount); 
+    if (type === 'Spent') {
+      validAmount = -validAmount; // Ensure spent amounts are negative
+    }
     console.log(`Transaction: ${type}, Mode: ${mode}, Amount: ₹${amount}`);
     await addTransactionAndUpdateStats(auth.currentUser?.uid || '', {
-      amount,
+      amount: validAmount,
       type,
       mode,
       description: description.trim() || undefined,
