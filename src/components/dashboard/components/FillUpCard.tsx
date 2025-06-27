@@ -1,18 +1,22 @@
 import * as React from 'react';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/material/styles';
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  Typography,
+  useMediaQuery,
+  useTheme,
+  Box,
+  Stack,
+  Chip,
+} from '@mui/material';
 import AccountBalanceWalletRoundedIcon from '@mui/icons-material/AccountBalanceWalletRounded';
-import { Box } from '@mui/material';
-
 import { auth, db } from '@src/firebaseConfig';
 import { doc, getDoc } from 'firebase/firestore';
 
 export default function FillUpCard() {
   const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const isSmall = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [upi, setUpi] = React.useState(0);
   const [cash, setCash] = React.useState(0);
@@ -21,100 +25,136 @@ export default function FillUpCard() {
     const fetchUserData = async () => {
       const uid = auth.currentUser?.uid;
       if (!uid) return;
-      const userRef = doc(db, 'users', uid);
-      const userSnap = await getDoc(userRef);
-
-      if (userSnap.exists()) {
-        const data = userSnap.data();
-        setUpi(data.upi || 0);
-        setCash(data.cash || 0);
+      const snap = await getDoc(doc(db, 'users', uid));
+      if (snap.exists()) {
+        const { upi = 0, cash = 0 } = snap.data();
+        setUpi(upi);
+        setCash(cash);
       }
     };
-
     fetchUserData();
   }, []);
 
   const total = upi + cash;
-  const upiPercent = total ? (upi / total) * 100 : 0;
-  const cashPercent = total ? (cash / total) * 100 : 0;
+  const upiPct = total ? (upi / total) * 100 : 0;
+  const cashPct = total ? (cash / total) * 100 : 0;
 
   return (
-    <Card sx={{ height: '100%' }}>
-      <CardContent sx={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between' }}>
-  <Box>
-    <Box
+    <Card
+      elevation={3}
       sx={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 1,
-        mb: 1,
-      }}
-    >
-      <AccountBalanceWalletRoundedIcon sx={{ fontSize: 26 }} />
-      <Typography
-        component="h2"
-        variant="subtitle2"
-        sx={{ fontWeight: 700 }}
-      >
-        Wallet Breakdown
-      </Typography>
-    </Box>
-
-    <Box sx={{ mb: 2 }}>
-      <Typography variant="body2">
-        <strong>UPI:</strong> ₹{upi}
-      </Typography>
-      <Typography variant="body2">
-        <strong>Cash:</strong> ₹{cash}
-      </Typography>
-    </Box>
-  </Box>
-
-  {/* Centered thin stacked bar */}
-  <Box sx={{ textAlign: 'center' }}>
-    <Box
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        width: '100%',
-        height: 8,
         borderRadius: 1,
-        overflow: 'hidden',
-        backgroundColor: theme.palette.grey[300],
-        mx: 'auto',
+        // original box color & border
+        border: `1px solid ${theme.palette.divider}`,
+        bgcolor: theme.palette.background.paper,
       }}
     >
-      <Box
-        sx={{
-          width: `${upiPercent}%`,
-          height: '100%',
-          backgroundColor: theme.palette.success.main,
-        }}
+      <CardHeader
+        avatar={
+          <AccountBalanceWalletRoundedIcon
+            sx={{ color: theme.palette.primary.main, fontSize: 30 }}
+          />
+        }
+        title={
+          <Typography variant="subtitle1" fontWeight={600}>
+            Wallet Breakdown
+          </Typography>
+        }
+        sx={{ pb: 0 }}
       />
-      <Box
-        sx={{
-          width: `${cashPercent}%`,
-          height: '100%',
-          backgroundColor: theme.palette.warning.main,
-        }}
-      />
-    </Box>
 
-    <Box
-      sx={{
-        mt: 0.5,
-        display: 'flex',
-        justifyContent: 'space-between',
-        fontSize: '0.75rem',
-        color: 'text.secondary',
-      }}
-    >
-      <span>UPI {upiPercent.toFixed(0)}%</span>
-      <span>Cash {cashPercent.toFixed(0)}%</span>
-    </Box>
-  </Box>
-</CardContent>
+      <CardContent sx={{ pt: 1 }}>
+        <Stack
+          direction={isSmall ? 'column' : 'row'}
+          justifyContent="space-between"
+          spacing={isSmall ? 1 : 2}
+          mb={2}
+        >
+          <Box>
+            <Typography variant="caption" color="text.secondary">
+              UPI
+            </Typography>
+            <Typography variant="h6" fontWeight={700}>
+              ₹{upi}
+            </Typography>
+          </Box>
+          <Box>
+            <Typography variant="caption" color="text.secondary">
+              Cash
+            </Typography>
+            <Typography variant="h6" fontWeight={700}>
+              ₹{cash}
+            </Typography>
+          </Box>
+          <Box textAlign={isSmall ? 'left' : 'right'}>
+            <Typography variant="caption" color="text.secondary">
+              Total
+            </Typography>
+            <Typography variant="h6" fontWeight={700}>
+              ₹{total}
+            </Typography>
+          </Box>
+        </Stack>
 
+        {/* Stacked thin bar */}
+        <Box sx={{ position: 'relative', mb: 1 }}>
+          <Box
+            sx={{
+              display: 'flex',
+              height: 8,
+              borderRadius: 1,
+              overflow: 'hidden',
+              backgroundColor: theme.palette.grey[300],
+            }}
+          >
+            <Box
+              sx={{
+                width: `${upiPct}%`,
+                bgcolor: "#00897b",
+                transition: 'width 0.8s ease',
+              }}
+            />
+            <Box
+              sx={{
+                width: `${cashPct}%`,
+                // bgcolor: theme.palette.warning.main,
+                bgcolor: "#8bc34a",
+                transition: 'width 0.8s ease',
+              }}
+            />
+          </Box>
+
+          {/* UPI percentage chip */}
+          <Box
+            sx={{
+              position: 'absolute',
+              top: -14,
+              left: `calc(${upiPct}% - 20px)`,
+              transform: 'translateX(-50%)',
+            }}
+          >
+            {/* <Chip
+              label={`${upiPct.toFixed(0)}% UPI`}
+              size="small"
+              sx={{
+                bgcolor: theme.palette.success.light,
+                fontWeight: 600,
+              }}
+            /> */}
+          </Box>
+        </Box>
+
+        {/* Percent labels */}
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          fontSize="0.75rem"
+          color="text.secondary"
+        >
+          <span>UPI: {upiPct.toFixed(0)}%</span>
+          <span>Cash: {cashPct.toFixed(0)}%</span>
+        </Box>
+      </CardContent>
     </Card>
   );
 }

@@ -149,7 +149,7 @@ export default function CustomizedDataGrid() {
         }}
         pageSizeOptions={[10, 30, 50]}
         density="compact"
-        disableColumnMenu
+        // disableColumnMenu
       />
     </Box>
   );

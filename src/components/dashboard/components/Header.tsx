@@ -8,7 +8,11 @@ import ColorModeIconDropdown from '../../shared-theme/ColorModeIconDropdown';
 
 import Search from './Search';
 
-export default function Header() {
+interface HeaderProps {
+  page?: string;
+}
+
+export default function Header({ page = 'Dashboard' }: HeaderProps) {
   return (
     <Stack
       direction="row"
@@ -22,13 +26,13 @@ export default function Header() {
       }}
       spacing={2}
     >
-      <NavbarBreadcrumbs />
+      <NavbarBreadcrumbs place={page} />
       <Stack direction="row" sx={{ gap: 1 }}>
         <Search />
         <StaticDateDisplay />
-        <MenuButton showBadge aria-label="Open notifications">
-          {/* <NotificationsRoundedIcon /> */}
-        </MenuButton>
+        {/* <MenuButton showBadge aria-label="Open notifications">
+          <NotificationsRoundedIcon />
+        </MenuButton> */}
         <ColorModeIconDropdown />
       </Stack>
     </Stack>

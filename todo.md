@@ -1,3 +1,8 @@
 - ADD LOADING ANIMATION
-- Take Name of person, during login/allow login to put name.
 - fix dashboard
+- add funcs in mobile
+- make abt page
+- graphs
+- ai
+- todo stuff/notes
+- fin news
