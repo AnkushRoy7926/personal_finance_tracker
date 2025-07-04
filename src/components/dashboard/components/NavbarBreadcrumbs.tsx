@@ -25,9 +25,9 @@ export default function NavbarBreadcrumbs({ place }: NavbarBreadcrumbsProps) {
       aria-label="breadcrumb"
       separator={<NavigateNextRoundedIcon fontSize="small" />}
     >
-      <Typography variant="body1">{place}</Typography>
+      <Typography variant="body1">Home</Typography>
       <Typography variant="body1" sx={{ color: 'text.primary', fontWeight: 600 }}>
-        Home
+       {place}
       </Typography>
     </StyledBreadcrumbs>
   );

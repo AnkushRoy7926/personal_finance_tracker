@@ -123,12 +123,12 @@ export default function AppAppBar() {
                 <MenuItem>FAQ</MenuItem>
                 <Divider sx={{ my: 3 }} />
                 <MenuItem>
-                  <Button color="primary" variant="contained" fullWidth>
-                    Sign up
-                  </Button>
+                    <Button color="primary" variant="contained" fullWidth onClick={() => window.location.href = '/signup'}>
+                      Sign up
+                    </Button>
                 </MenuItem>
                 <MenuItem>
-                  <Button color="primary" variant="outlined" fullWidth>
+                  <Button color="primary" variant="outlined" fullWidth onClick={() => window.location.href = '/login'}>
                     Sign in
                   </Button>
                 </MenuItem>

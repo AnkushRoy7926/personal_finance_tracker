@@ -1,73 +1,63 @@
 'use client';
 
-import React from 'react';
-import { Box, Typography, CircularProgress, Backdrop, useTheme } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import {
+  Box,
+  Typography,
+  CircularProgress,
+  Backdrop,
+  useTheme,
+} from '@mui/material';
 
-const LoadingScreen = () => {
+const LoadingScreen: React.FC = () => {
   const theme = useTheme();
+  const [dots, setDots] = useState('');
+
+  // cycle between '', '.', '..', '...' every 400ms
+  useEffect(() => {
+    const id = setInterval(() => {
+      setDots(prev => (prev.length < 3 ? prev + '.' : ''));
+    }, 400);
+    return () => clearInterval(id);
+  }, []);
 
   return (
     <Backdrop
       open
       sx={{
         color: '#fff',
-        zIndex: (t) => t.zIndex.drawer + 1,
         backdropFilter: 'blur(4px)',
         backgroundColor: 'rgba(0, 0, 0, 0.4)',
+        zIndex: theme.zIndex.drawer + 1,
       }}
     >
       <Box
         sx={{
           p: 4,
-          borderRadius: 4,
-          backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.3)',
-          boxShadow: 4,
+          borderRadius: 2,
+          backgroundColor:
+            theme.palette.mode === 'dark'
+              ? 'rgba(255,255,255,0.08)'
+              : 'rgba(255,255,255,0.3)',
+          boxShadow: 3,
           display: 'flex',
-          backdropFilter: 'blur(10px)',
-          justifyContent: 'center',
           flexDirection: 'column',
           alignItems: 'center',
-          minWidth: 220,
-          minHeight:220,
-          aspectRatio: '1 / 1',
+          justifyContent: 'center',
+          minWidth: 200,
+          minHeight: 200,
+          backdropFilter: 'blur(10px)',
         }}
       >
         <CircularProgress
           thickness={5}
           size={60}
-          sx={{
-            color: theme.palette.primary.main,
-            mb: 2,
-            animation: 'pulse 1.2s infinite ease-in-out',
-          }}
+          sx={{ color: theme.palette.primary.main, mb: 2 }}
         />
         <Typography variant="h6" fontWeight={500}>
-          Loading<span className="dots">...</span>
+          Loading {dots}
         </Typography>
       </Box>
-
-      <style jsx global>{`
-        @keyframes pulse {
-          0% { transform: scale(1); }
-          50% { transform: scale(1.1); }
-          100% { transform: scale(1); }
-        }
-
-        .dots::after {
-          content: '';
-          display: inline-block;
-          width: 1em;
-          text-align: left;
-          animation: dots 1.5s steps(3, end) infinite;
-        }
-
-        @keyframes dots {
-          0%, 20% { content: ''; }
-          40% { content: '.'; }
-          60% { content: '..'; }
-          80%, 100% { content: '...'; }
-        }
-      `}</style>
     </Backdrop>
   );
 };

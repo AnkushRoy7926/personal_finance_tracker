@@ -23,6 +23,7 @@ import {
   datePickersCustomizations,
   treeViewCustomizations,
 } from '@src/components/dashboard/theme/customizations';
+import Typography from "@mui/material/Typography";
 
 const xThemeComponents = {
   ...chartsCustomizations,
@@ -55,9 +56,14 @@ const trans = (props: { disableCustomTheme?: boolean }) => {
               pb: 5,
               mt: { xs: 8, md: 0 },
             }}
-          >
+            >
             <Header page="Transactions"/>
-            {/* <MainGrid /> */}
+            <Box sx={{display: 'flex', alignItems: 'left', width: '100%'}}>
+
+            <Typography sx={{fontWeight: 600, fontSize: '1.5rem', color: 'text.primary'}}>
+              Transactions
+            </Typography>
+            </Box>
             <CustomizedDataGrid/>
           </Stack>
         </Box>

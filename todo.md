@@ -1,8 +1,12 @@
-- ADD LOADING ANIMATION
-- fix dashboard
+<!-- - ADD LOADING ANIMATION -->
+<!-- - fix dashboard -->
 - add funcs in mobile
-- make abt page
+- transaction pagination
+- desc editable
+- LOgo
+<!-- - make abt page -->
+- improve abt page
 - graphs
 - ai
 - todo stuff/notes
-- fin news
+<!-- - fin news -->
