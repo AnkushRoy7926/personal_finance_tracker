@@ -18,10 +18,13 @@ import { styled } from '@mui/material/styles';
 import ForgotPassword from './components/ForgotPassword';
 import AppTheme from '../shared-theme/AppTheme';
 import ColorModeSelect from '../shared-theme/ColorModeSelect';
-import { GoogleIcon, FacebookIcon, SitemarkIcon } from './components/CustomIcons';
+import { GoogleIcon, SitemarkIcon } from './components/CustomIcons';
 import { GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword} from 'firebase/auth';
 import { auth } from '../../firebaseConfig';
 import { useRouter } from 'next/navigation';
+import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '../../firebaseConfig';
+
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -64,6 +67,42 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
     }),
   },
 }));
+
+
+function getTodayDateString(): string {
+  return new Date().toISOString().split('T')[0];
+}
+
+async function createUserProfile(email: string, name: string, uid: string) {
+  const userRef = doc(db, 'users', uid);
+  const existing = await getDoc(userRef);
+  if (existing.exists()) return;
+
+  await setDoc(userRef, {
+    name,
+    email,
+    upi: 0,
+    cash: 0,
+    totalBalance: 0,
+    createdAt: serverTimestamp(),
+  });
+
+  const txnRef = doc(db, 'users', uid, 'transactions', 'initial');
+  await setDoc(txnRef, {
+    amount: 0,
+    timestamp: serverTimestamp(),
+  });
+
+  const today = getTodayDateString();
+  const statsRef = doc(db, 'users', uid, 'dailyStats', today);
+  await setDoc(statsRef, {
+    date: today,
+    added: 0,
+    spent: 0,
+    balance: 0,
+  });
+}
+
 
 export default function SignIn(props: { disableCustomTheme?: boolean }) {
   const [emailError, setEmailError] = React.useState(false);
@@ -155,15 +194,28 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   const router = useRouter();
   
   const googleSignIn = async () => {
-
-      try {
-        const result = await signInWithPopup(auth, googleProvider);
-        console.log('User logged in with Google:', result.user);
-        router.push('/dashboard');
-      } catch (error) {
-        console.error('Error logging in with Google:', error);
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+  
+      const userRef = doc(db, 'users', user.uid);
+      const userSnap = await getDoc(userRef);
+  
+      if (!userSnap.exists()) {
+        await createUserProfile(user.email ?? '', user.displayName ?? 'Random User', user.uid);
+        console.log('New user profile created after Google login.');
+      } else {
+        console.log('User already exists in Firestore.');
       }
-    };
+  
+      router.push('/dashboard');
+    } catch (error) {
+      console.error('Error logging in with Google:', error);
+    }
+  };
+  
+
+  
 
   return (
     <AppTheme {...props}>

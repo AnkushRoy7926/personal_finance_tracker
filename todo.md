@@ -10,3 +10,5 @@
 - ai
 - todo stuff/notes
 <!-- - fin news -->
+<!-- DEbugging -->
+offline handling
