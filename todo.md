@@ -1,14 +1,14 @@
-<!-- - ADD LOADING ANIMATION -->
-<!-- - fix dashboard -->
 - add funcs in mobile
 - transaction pagination
 - desc editable
-- LOgo
-<!-- - make abt page -->
+- Logo
 - improve abt page
 - graphs
 - ai
 - todo stuff/notes
-<!-- - fin news -->
+- offline handling
+<!-- - fix dashboard -->
+<!-- - ADD LOADING ANIMATION -->
+<!-- - make abt page -->
 <!-- DEbugging -->
-offline handling
+<!-- - fin news -->
