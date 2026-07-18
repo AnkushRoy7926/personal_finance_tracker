@@ -215,7 +215,8 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
       } else if (error.code === 'auth/popup-blocked') {
         setGoogleError('Popup was blocked. Please allow popups for this site.');
       } else {
-        setGoogleError('Google sign-in failed. Please try again.');
+        const code = error.code || 'unknown';
+        setGoogleError(`Google sign-in failed (${code}). Check Firebase console: Authentication → Sign-in method → Google must be enabled, and your Vercel domain must be in Authorized domains.`);
       }
       console.error('Error logging in with Google:', error);
     }
