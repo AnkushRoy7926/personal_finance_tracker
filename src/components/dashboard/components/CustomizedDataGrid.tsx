@@ -3,7 +3,8 @@
 import * as React from 'react';
 import { DataGrid, GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { transactionDetails, Transaction } from '@src/utils/fetchDataFB';
-import { auth } from '@src/firebaseConfig';
+import { auth, db } from '@src/firebaseConfig';
+import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
 import Chip from '@mui/material/Chip';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -108,10 +109,20 @@ export default function CustomizedDataGrid() {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   React.useEffect(() => {
-    (async () => {
-      const uid = auth.currentUser?.uid;
-      if (!uid) return;
-      const txns: Transaction[] = await transactionDetails(uid);
+    const uid = auth.currentUser?.uid;
+    if (!uid) return;
+
+    const txnsRef = collection(db, 'users', uid, 'transactions');
+    const q = query(txnsRef, orderBy('timestamp', 'desc'));
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const txns: Transaction[] = snapshot.docs
+        .filter((doc) => doc.id !== 'initial')
+        .map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as Transaction[];
+
       setRows(
         txns.map((txn) => ({
           id: txn.id,
@@ -120,15 +131,17 @@ export default function CustomizedDataGrid() {
           mode: txn.mode,
           category: txn.category || 'Other',
           description: txn.description || '—',
-          timestamp: txn.timestamp.toDate() || null,
-          day: txn.timestamp.toDate().toLocaleDateString('en-GB', {
+          timestamp: txn.timestamp?.toDate?.() || new Date(),
+          day: (txn.timestamp?.toDate?.() || new Date()).toLocaleDateString('en-GB', {
             day: '2-digit',
             month: 'short',
             year: 'numeric',
-          }) + " " + txn.day,
+          }) + ' ' + (txn.day || ''),
         }))
       );
-    })();
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const handleDeleteRow = async (docId: string) => {

@@ -1,152 +1,212 @@
 'use client';
 
-import React from 'react';
-import { Container, Box, Typography, Avatar, Link, IconButton, Chip, Divider, Paper } from '@mui/material';
-import Grid2 from '@mui/material/Grid2';
-import EmailIcon from '@mui/icons-material/Email';
+import * as React from 'react';
+import { alpha } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Chip from '@mui/material/Chip';
+import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
+import Link from '@mui/material/Link';
+import AccountBalanceRoundedIcon from '@mui/icons-material/AccountBalanceRounded';
+import InsightsRoundedIcon from '@mui/icons-material/InsightsRounded';
+import ShieldRoundedIcon from '@mui/icons-material/ShieldRounded';
+import CodeRoundedIcon from '@mui/icons-material/CodeRounded';
 import GitHubIcon from '@mui/icons-material/GitHub';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import { useTheme } from '@mui/material/styles';
+import EmailIcon from '@mui/icons-material/Email';
 
-// Firebase imports
-import { auth, db } from '@src/firebaseConfig';
-import { doc, getDoc } from 'firebase/firestore';
+import AppNavbar from '@src/components/dashboard/components/AppNavbar';
+import Header from '@src/components/dashboard/components/Header';
+import SideMenu from '@src/components/dashboard/components/SideMenu';
+import AppTheme from '@src/components/shared-theme/AppTheme';
+import {
+  chartsCustomizations,
+  dataGridCustomizations,
+  datePickersCustomizations,
+  treeViewCustomizations,
+} from '@src/components/dashboard/theme/customizations';
 
-export default function AboutPage() {
-  const theme = useTheme();
-  const isDark = theme.palette.mode === 'dark';
+const xThemeComponents = {
+  ...chartsCustomizations,
+  ...dataGridCustomizations,
+  ...datePickersCustomizations,
+  ...treeViewCustomizations,
+};
 
+const techStack = [
+  'Next.js', 'React', 'TypeScript', 'Material UI',
+  'Firebase', 'Firestore', 'Vercel',
+];
+
+const highlights = [
+  {
+    icon: <AccountBalanceRoundedIcon />,
+    title: 'Transaction Tracking',
+    description: 'Log income and expenses with category, payment mode, and description. Supports UPI and Cash breakdowns.',
+  },
+  {
+    icon: <InsightsRoundedIcon />,
+    title: 'AI Financial Insights',
+    description: 'Get a health score, detect spending anomalies, identify recurring payments, and receive personalized recommendations.',
+  },
+  {
+    icon: <ShieldRoundedIcon />,
+    title: 'Your Data, Your Device',
+    description: 'All data lives in your personal Firebase project. No third-party servers, no data sharing, no tracking.',
+  },
+  {
+    icon: <CodeRoundedIcon />,
+    title: 'Open & Extensible',
+    description: 'Built with modern web technologies. Clean architecture that\'s easy to understand, modify, and deploy.',
+  },
+];
+
+function AboutContent(props: { disableCustomTheme?: boolean }) {
   return (
-    <Box sx={{
-      bgcolor: isDark ? '#0c0e15' : theme.palette.background.default,
-      color: theme.palette.text.primary,
-      minHeight: '100vh',
-      py: 8,
-    }}>
-      <Container maxWidth="md">
-        {/* Header */}
-        <Box textAlign="center" mb={6}>
-          <Avatar
-            alt="Your Name"
-            src="/images/profile.jpg"
+    <AppTheme {...props} themeComponents={xThemeComponents}>
+      <CssBaseline enableColorScheme />
+      <Box sx={{ display: 'flex' }}>
+        <SideMenu />
+        <AppNavbar page="About" />
+        <Box
+          component="main"
+          sx={(theme) => ({
+            flexGrow: 1,
+            backgroundColor: alpha(theme.palette.background.default, 1),
+            overflow: 'auto',
+          })}
+        >
+          <Stack
+            spacing={4}
             sx={{
-              width: 120,
-              height: 120,
-              mx: 'auto',
-              mb: 2,
-              border: `2px solid ${theme.palette.primary.main}`,
+              mx: { xs: 1.5, sm: 3 },
+              pb: 5,
+              mt: { xs: 8, md: 0 },
+              maxWidth: 900,
+              width: '100%',
             }}
-          />
-          <Typography variant="h4" component="h1" gutterBottom sx={{ color: theme.palette.primary.main }}>
-            About Me
-          </Typography>
-          <Typography
-            variant="body1"
-            sx={{ maxWidth: 600, mx: 'auto', color: theme.palette.text.secondary }}
           >
-            Hello! I'm <strong>Your Name</strong>, a passionate programmer and tech enthusiast specializing in web development, machine learning, and physics simulations. I love crafting clean, performant code and learning new technologies.
-          </Typography>
-        </Box>
+            <Header page="About" />
 
-        <Divider sx={{ mb: 6, borderColor: theme.palette.divider }} />
+            {/* Hero */}
+            <Box sx={{ textAlign: 'center' }}>
+              <Typography
+                variant="h1"
+                sx={{
+                  display: 'flex',
+                  flexDirection: { xs: 'column', sm: 'row' },
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: 'clamp(2rem, 6vw, 3rem)',
+                  mb: 2,
+                }}
+              >
+                Project&nbsp;
+                <Typography
+                  component="span"
+                  variant="h1"
+                  sx={(theme) => ({
+                    fontSize: 'inherit',
+                    color: 'primary.main',
+                    ...theme.applyStyles('dark', { color: 'primary.light' }),
+                  })}
+                >
+                  Pluto
+                </Typography>
+              </Typography>
+              <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 560, mx: 'auto', lineHeight: 1.7 }}>
+                A personal finance tracker built for one person: you. Log transactions,
+                see where your money goes, and stay in control without the bloat of
+                enterprise software.
+              </Typography>
+            </Box>
 
-        {/* Content Sections */}
-        <Grid2 container spacing={4}>
-          {/* Background */}
-          <Grid2 xs={12} md={6}>
-            {/* <Paper
-              variant="outlined"
-              sx={{
-                p: 2,
-                bgcolor: isDark ? '#161b2d' : theme.palette.background.paper,
-                borderColor: theme.palette.divider,
-              }}
-            > */}
-              <Typography variant="h6" gutterBottom sx={{ color: theme.palette.primary.main }}>
-                Background
-              </Typography>
-              <Typography variant="body2" sx={{ color: theme.palette.text.secondary }}>
-                I started coding in high school and have explored languages like Python, C++, Rust, and JavaScript. My academic journey includes projects on neural networks, real-time physics simulations, and full-stack web apps. I'm currently diving deeper into generative AI and building interactive user interfaces with modern frameworks.
-              </Typography>
-            {/* </Paper> */}
-          </Grid2>
+            <Divider />
 
-          {/* Skills */}
-          <Grid2 xs={12} md={6}>
-            {/* <Paper
-              variant="outlined"
-              sx={{
-                p: 2,
-                bgcolor: isDark ? '#161b2d' : theme.palette.background.paper,
-                borderColor: theme.palette.divider,
-              }}
-            > */}
-              <Typography variant="h6" gutterBottom sx={{ color: theme.palette.primary.main }}>
-                Skills & Tools
+            {/* Highlights */}
+            <Box>
+              <Typography variant="h2" sx={{ mb: 3, fontSize: 'clamp(1.5rem, 3vw, 1.75rem)' }}>
+                What it does
               </Typography>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                {['React', 'Next.js', 'Material UI', 'Python', 'C++', 'Rust', 'Firebase', 'Docker', 'TensorFlow'].map(skill => (
-                  <Chip
-                    key={skill}
-                    label={skill}
-                    size="small"
-                    sx={{
-                      bgcolor: isDark ? theme.palette.grey[800] : theme.palette.grey[200],
-                      color: theme.palette.text.primary,
-                    }}
-                  />
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' },
+                  gap: 2,
+                }}
+              >
+                {highlights.map((item) => (
+                  <Card key={item.title} variant="outlined" sx={{ height: '100%' }}>
+                    <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                      <Box sx={{ color: 'primary.main', display: 'flex' }}>
+                        {item.icon}
+                      </Box>
+                      <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                        {item.title}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.65 }}>
+                        {item.description}
+                      </Typography>
+                    </CardContent>
+                  </Card>
                 ))}
               </Box>
-            {/* </Paper> */}
-          </Grid2>
+            </Box>
 
-          {/* Hobbies */}
-          <Grid2 xs={12} md={6}>
-            {/* <Paper
-              variant="outlined"
-              sx={{
-                p: 2,
-                bgcolor: isDark ? '#161b2d' : theme.palette.background.paper,
-                borderColor: theme.palette.divider,
-              }}
-            > */}
-              <Typography variant="h6" gutterBottom sx={{ color: theme.palette.primary.main }}>
-                Hobbies
-              </Typography>
-              <Typography variant="body2" sx={{ color: theme.palette.text.secondary }}>
-                Apart from coding, I enjoy reading about astrophysics, solving math puzzles, and participating in hackathons. I'm also an avid photo editor and love creating digital art in my free time.
-              </Typography>
-            {/* </Paper> */}
-          </Grid2>
+            <Divider />
 
-          {/* Contact */}
-          <Grid2 xs={12} md={6}>
-            {/* <Paper
-              variant="outlined"
-              sx={{
-                p: 2,
-                bgcolor: isDark ? '#161b2d' : theme.palette.background.paper,
-                borderColor: theme.palette.divider,
-              }}
-            > */}
-              <Typography variant="h6" gutterBottom sx={{ color: theme.palette.primary.main }}>
-                Connect with me
+            {/* Tech Stack */}
+            <Box>
+              <Typography variant="h2" sx={{ mb: 2, fontSize: 'clamp(1.5rem, 3vw, 1.75rem)' }}>
+                Built with
               </Typography>
-              <Box>
-                <IconButton component={Link} href="mailto:youremail@example.com" color="primary">
-                  <EmailIcon />
-                </IconButton>
-                <IconButton component={Link} href="https://github.com/yourusername" target="_blank" color="primary">
+              <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+                {techStack.map((tech) => (
+                  <Chip key={tech} label={tech} variant="outlined" />
+                ))}
+              </Stack>
+            </Box>
+
+            <Divider />
+
+            {/* Contact */}
+            <Box>
+              <Typography variant="h2" sx={{ mb: 2, fontSize: 'clamp(1.5rem, 3vw, 1.75rem)' }}>
+                Get in touch
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 2, lineHeight: 1.65 }}>
+                Have feedback, found a bug, or want to contribute? Reach out on GitHub or drop an email.
+              </Typography>
+              <Stack direction="row" spacing={1}>
+                <IconButton
+                  component={Link}
+                  href="https://github.com/AnkushRoy7926/personal_finance_tracker"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="GitHub repository"
+                  color="primary"
+                >
                   <GitHubIcon />
                 </IconButton>
-                <IconButton component={Link} href="https://linkedin.com/in/yourprofile" target="_blank" color="primary">
-                  <LinkedInIcon />
+                <IconButton
+                  component={Link}
+                  href="mailto:ankushroy7926@outlook.com"
+                  aria-label="Send email"
+                  color="primary"
+                >
+                  <EmailIcon />
                 </IconButton>
-              </Box>
-            {/* </Paper> */}
-          </Grid2>
-        </Grid2>
-      </Container>
-    </Box>
+              </Stack>
+            </Box>
+          </Stack>
+        </Box>
+      </Box>
+    </AppTheme>
   );
 }
+
+export default AboutContent;

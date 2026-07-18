@@ -488,7 +488,7 @@ function FeedbackContent(props: { disableCustomTheme?: boolean }) {
         <SideMenu />
         <AppNavbar page="AI Feedback" />
         <Box component="main" sx={(theme) => ({ flexGrow: 1, backgroundColor: alpha(theme.palette.background.default, 1), overflow: "auto" })}>
-          <Stack spacing={3} sx={{ mx: { xs: 1.5, sm: 3 }, pb: 5, mt: { xs: 8, md: 0 }, width: "100%", maxWidth: { md: 1100 } }}>
+          <Stack spacing={3} sx={{ mx: { xs: 1.5, sm: 3 }, pb: 5, mt: { xs: 8, md: 0 }, width: "100%" }}>
             <Header page="AI Feedback" />
             <Box sx={{ display: "flex", alignItems: "center", gap: 1, width: "100%" }}>
               <InfoRoundedIcon sx={{ color: "text.secondary", fontSize: 20 }} />
