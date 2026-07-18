@@ -13,16 +13,12 @@ import Stack from '@mui/material/Stack';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import AnalyticsRoundedIcon from '@mui/icons-material/AnalyticsRounded';
 import PeopleRoundedIcon from '@mui/icons-material/PeopleRounded';
-import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
-import ArticleRoundedIcon from '@mui/icons-material/ArticleRounded'; // News icon
 
 const mainListItems = [
   { text: 'Home', icon: <HomeRoundedIcon />, path: '/dashboard' },
   { text: 'Transactions', icon: <AnalyticsRoundedIcon />, path: '/transactions' },
-  { text: 'Tasks', icon: <AssignmentRoundedIcon />, path: '/tasks' },
   { text: 'AI Feedback', icon: <PeopleRoundedIcon />, path: '/feedback' },
-  { text: 'News', icon: <ArticleRoundedIcon />, path: '/news' },
 ];
 
 const secondaryListItems = [

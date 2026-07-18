@@ -25,10 +25,10 @@ export default function CompanyHeader() {
         width: '100%',
       }}
     >
-      <Avatar alt="FinTrack Logo">F</Avatar>
+      <Avatar alt="Project Pluto Logo">P</Avatar>
       <Box sx={{ display: 'flex', flexDirection: 'column', pt: 1 }}>
         <Typography variant="subtitle1" fontWeight={600} sx={{mb: 0, lineHeight: 1.2, fontSize: '1.2rem'}}>
-          FinTrack
+          Project Pluto
         </Typography>
         <Typography variant="caption" color="text.secondary" sx={{ mt: 0 }}>
           Track smarter. Save faster.

@@ -54,22 +54,16 @@ export default function AppAppBar() {
     >
       <Container maxWidth="lg">
         <StyledToolbar variant="dense" disableGutters>
-          <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', px: 0 }}>
+          <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', px: 0, color: 'text.primary' }}>
             <Sitemark />
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-              <Button variant="text" color="info" size="small">
+              <Button variant="text" color="info" size="small" component={Link} href="#features">
                 Features
               </Button>
-              <Button variant="text" color="info" size="small">
-                Testimonials
-              </Button>
-              <Button variant="text" color="info" size="small">
+              <Button variant="text" color="info" size="small" component={Link} href="#highlights">
                 Highlights
               </Button>
-              <Button variant="text" color="info" size="small">
-                Pricing
-              </Button>
-              <Button variant="text" color="info" size="small" sx={{ minWidth: 0 }}>
+              <Button variant="text" color="info" size="small" component={Link} href="#faq">
                 FAQ
               </Button>
             </Box>
@@ -116,19 +110,17 @@ export default function AppAppBar() {
                   </IconButton>
                 </Box>
 
-                <MenuItem>Features</MenuItem>
-                <MenuItem>Testimonials</MenuItem>
-                <MenuItem>Highlights</MenuItem>
-                <MenuItem>Pricing</MenuItem>
-                <MenuItem>FAQ</MenuItem>
+                <MenuItem component={Link} href="#features">Features</MenuItem>
+                <MenuItem component={Link} href="#highlights">Highlights</MenuItem>
+                <MenuItem component={Link} href="#faq">FAQ</MenuItem>
                 <Divider sx={{ my: 3 }} />
                 <MenuItem>
-                    <Button color="primary" variant="contained" fullWidth onClick={() => window.location.href = '/signup'}>
+                    <Button color="primary" variant="contained" fullWidth component={Link} href="/signup">
                       Sign up
                     </Button>
                 </MenuItem>
                 <MenuItem>
-                  <Button color="primary" variant="outlined" fullWidth onClick={() => window.location.href = '/login'}>
+                  <Button color="primary" variant="outlined" fullWidth component={Link} href="/login">
                     Sign in
                   </Button>
                 </MenuItem>

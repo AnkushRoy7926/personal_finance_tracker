@@ -1,11 +1,20 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    typescript: {
-        ignoreBuildErrors: true,  // Skip TypeScript errors during build
-      },
-      eslint: {
-        ignoreDuringBuilds: true,  // Skip ESLint errors during build (optional)
-      }
+  reactStrictMode: true,
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  experimental: {
+    optimizePackageImports: [
+      '@mui/material',
+      '@mui/icons-material',
+      '@mui/x-charts',
+      '@mui/x-data-grid',
+    ],
+  },
 };
 
 export default nextConfig;

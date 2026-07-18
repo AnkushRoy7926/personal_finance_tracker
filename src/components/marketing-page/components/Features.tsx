@@ -7,35 +7,33 @@ import MuiChip from '@mui/material/Chip';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/system';
+import Link from 'next/link';
 
-import DevicesRoundedIcon from '@mui/icons-material/DevicesRounded';
-import EdgesensorHighRoundedIcon from '@mui/icons-material/EdgesensorHighRounded';
-import ViewQuiltRoundedIcon from '@mui/icons-material/ViewQuiltRounded';
+import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
+import ReceiptLongRoundedIcon from '@mui/icons-material/ReceiptLongRounded';
+import ChatRoundedIcon from '@mui/icons-material/ChatRounded';
 
 const items = [
   {
-    icon: <ViewQuiltRoundedIcon />,
-    title: 'Dashboard',
+    icon: <DashboardRoundedIcon />,
+    title: 'Interactive dashboard',
     description:
-      'This item could provide a snapshot of the most important metrics or data points related to the product.',
-    imageLight: `url("${process.env.TEMPLATE_IMAGE_URL || 'https://mui.com'}/static/images/templates/templates-images/dash-light.png")`,
-    imageDark: `url("${process.env.TEMPLATE_IMAGE_URL || 'https://mui.com'}/static/images/templates/templates-images/dash-dark.png")`,
+      'See your income, expenses, and balance at a glance. Charts and summaries update as you log new transactions.',
+    color: 'hsl(210, 98%, 48%)',
   },
   {
-    icon: <EdgesensorHighRoundedIcon />,
-    title: 'Mobile integration',
+    icon: <ReceiptLongRoundedIcon />,
+    title: 'Transaction tracking',
     description:
-      'This item could provide information about the mobile app version of the product.',
-    imageLight: `url("${process.env.TEMPLATE_IMAGE_URL || 'https://mui.com'}/static/images/templates/templates-images/mobile-light.png")`,
-    imageDark: `url("${process.env.TEMPLATE_IMAGE_URL || 'https://mui.com'}/static/images/templates/templates-images/mobile-dark.png")`,
+      'Log purchases, split recurring charges, and categorize spending so nothing slips through the cracks.',
+    color: 'hsl(120, 44%, 53%)',
   },
   {
-    icon: <DevicesRoundedIcon />,
-    title: 'Available on all platforms',
+    icon: <ChatRoundedIcon />,
+    title: 'AI-powered insights',
     description:
-      'This item could let users know the product is available on all platforms, such as web, mobile, and desktop.',
-    imageLight: `url("${process.env.TEMPLATE_IMAGE_URL || 'https://mui.com'}/static/images/templates/templates-images/devices-light.png")`,
-    imageDark: `url("${process.env.TEMPLATE_IMAGE_URL || 'https://mui.com'}/static/images/templates/templates-images/devices-dark.png")`,
+      'Ask your finances questions in plain language. Get answers about trends, budgets, and upcoming bills.',
+    color: 'hsl(260, 60%, 55%)',
   },
 ];
 
@@ -86,7 +84,7 @@ export function MobileLayout({
         gap: 2,
       }}
     >
-      <Box sx={{ display: 'flex', gap: 2, overflow: 'auto' }}>
+      <Box sx={{ display: 'flex', gap: 2, overflow: 'auto', pb: 1 }}>
         {items.map(({ title }, index) => (
           <Chip
             size="medium"
@@ -99,25 +97,20 @@ export function MobileLayout({
       </Box>
       <Card variant="outlined">
         <Box
-          sx={(theme) => ({
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
             mb: 2,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            minHeight: 280,
-            backgroundImage: 'var(--items-imageLight)',
-            ...(theme.applyStyles ? theme.applyStyles('dark', {
-              backgroundImage: 'var(--items-imageDark)',
-            }) : {}),
-          })}
-          style={
-            items[selectedItemIndex]
-              ? ({
-                  '--items-imageLight': items[selectedItemIndex].imageLight,
-                  '--items-imageDark': items[selectedItemIndex].imageDark,
-                } as any)
-              : {}
-          }
-        />
+            minHeight: 200,
+            bgcolor: 'action.hover',
+            borderRadius: 'inherit',
+          }}
+        >
+          <Box sx={{ color: selectedFeature.color, display: 'flex' }}>
+            {React.cloneElement(selectedFeature.icon, { sx: { fontSize: 64 } })}
+          </Box>
+        </Box>
         <Box sx={{ px: 2, pb: 2 }}>
           <Typography
             gutterBottom
@@ -152,15 +145,14 @@ export default function Features() {
           gutterBottom
           sx={{ color: 'text.primary' }}
         >
-          Product features
+          What it does
         </Typography>
         <Typography
           variant="body1"
           sx={{ color: 'text.secondary', mb: { xs: 2, sm: 4 } }}
         >
-          Provide a brief overview of the key features of the product. For example,
-          you could list the number of features, their types or benefits, and
-          add-ons.
+          Three core features that cover the essentials: see the big picture, log
+          what you spend, and ask questions about your habits.
         </Typography>
       </Box>
       <Box
@@ -242,29 +234,36 @@ export default function Features() {
               height: '100%',
               width: '100%',
               display: { xs: 'none', sm: 'flex' },
+              alignItems: 'center',
+              justifyContent: 'center',
               pointerEvents: 'none',
             }}
           >
             <Box
-              sx={(theme) => ({
+              sx={{
                 m: 'auto',
                 width: 420,
-                height: 500,
-                backgroundSize: 'contain',
-                backgroundImage: 'var(--items-imageLight)',
-                ...theme.applyStyles('dark', {
-                  backgroundImage: 'var(--items-imageDark)',
-                }),
-              })}
-              style={
-                items[selectedItemIndex]
-                  ? ({
-                      '--items-imageLight': items[selectedItemIndex].imageLight,
-                      '--items-imageDark': items[selectedItemIndex].imageDark,
-                    } as any)
-                  : {}
-              }
-            />
+                height: 400,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                bgcolor: 'action.hover',
+                borderRadius: 1,
+              }}
+            >
+              <Box
+                sx={{
+                  color: items[selectedItemIndex]?.color ?? 'primary.main',
+                  display: 'flex',
+                  transition: 'color 0.3s',
+                }}
+              >
+                {items[selectedItemIndex] &&
+                  React.cloneElement(items[selectedItemIndex].icon, {
+                    sx: { fontSize: 96 },
+                  })}
+              </Box>
+            </Box>
           </Card>
         </Box>
       </Box>

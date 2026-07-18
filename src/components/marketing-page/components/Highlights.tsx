@@ -5,49 +5,49 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid2';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import AutoFixHighRoundedIcon from '@mui/icons-material/AutoFixHighRounded';
-import ConstructionRoundedIcon from '@mui/icons-material/ConstructionRounded';
-import QueryStatsRoundedIcon from '@mui/icons-material/QueryStatsRounded';
-import SettingsSuggestRoundedIcon from '@mui/icons-material/SettingsSuggestRounded';
-import SupportAgentRoundedIcon from '@mui/icons-material/SupportAgentRounded';
-import ThumbUpAltRoundedIcon from '@mui/icons-material/ThumbUpAltRounded';
+import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
+import PhonelinkRoundedIcon from '@mui/icons-material/PhonelinkRounded';
+import CodeRoundedIcon from '@mui/icons-material/CodeRounded';
+import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
+import OfflineBoltRoundedIcon from '@mui/icons-material/OfflineBoltRounded';
+import PrivacyTipRoundedIcon from '@mui/icons-material/PrivacyTipRounded';
 
 const items = [
   {
-    icon: <SettingsSuggestRoundedIcon />,
-    title: 'Adaptable performance',
+    icon: <StorageRoundedIcon />,
+    title: 'Firebase backend',
     description:
-      'Our product effortlessly adjusts to your needs, boosting efficiency and simplifying your tasks.',
+      'Authentication and data storage handled by Firebase. Your information lives in your own project, not on someone else\'s server.',
   },
   {
-    icon: <ConstructionRoundedIcon />,
-    title: 'Built to last',
+    icon: <PhonelinkRoundedIcon />,
+    title: 'Works on any device',
     description:
-      'Experience unmatched durability that goes above and beyond with lasting investment.',
+      'Responsive layout adapts from phone to ultrawide. Log a transaction on your commute, check your chart on your laptop.',
   },
   {
-    icon: <ThumbUpAltRoundedIcon />,
-    title: 'Great user experience',
+    icon: <CodeRoundedIcon />,
+    title: 'Open to read',
     description:
-      'Integrate our product into your routine with an intuitive and easy-to-use interface.',
+      'Built with Next.js, MUI, and TypeScript. Every component is something you can learn from, modify, or extend.',
   },
   {
-    icon: <AutoFixHighRoundedIcon />,
-    title: 'Innovative functionality',
+    icon: <DarkModeRoundedIcon />,
+    title: 'Dark mode',
     description:
-      'Stay ahead with features that set new standards, addressing your evolving needs better than the rest.',
+      'System-aware color scheme toggle. Use it at night without burning your retinas, or switch manually.',
   },
   {
-    icon: <SupportAgentRoundedIcon />,
-    title: 'Reliable support',
+    icon: <OfflineBoltRoundedIcon />,
+    title: 'Fast by default',
     description:
-      'Count on our responsive customer support, offering assistance that goes beyond the purchase.',
+      'Server-side rendering and optimized bundling keep the interface snappy even on modest hardware.',
   },
   {
-    icon: <QueryStatsRoundedIcon />,
-    title: 'Precision in every detail',
+    icon: <PrivacyTipRoundedIcon />,
+    title: 'No tracking',
     description:
-      'Enjoy a meticulously crafted product where small touches make a significant impact on your overall experience.',
+      'No analytics scripts, no ad pixels, no third-party trackers. Just a tool that does its job and nothing else.',
   },
 ];
 
@@ -78,12 +78,11 @@ export default function Highlights() {
           }}
         >
           <Typography component="h2" variant="h4" gutterBottom>
-            Highlights
+            Under the hood
           </Typography>
           <Typography variant="body1" sx={{ color: 'grey.400' }}>
-            Explore why our product stands out: adaptability, durability,
-            user-friendly design, and innovation. Enjoy reliable customer support and
-            precision in every detail.
+            The decisions that make Project Pluto what it is: a small, honest stack
+            with no unnecessary dependencies.
           </Typography>
         </Box>
         <Grid container spacing={2}>

@@ -193,23 +193,30 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
 
   const router = useRouter();
   
+  const [googleError, setGoogleError] = React.useState('');
+
   const googleSignIn = async () => {
+    setGoogleError('');
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
-  
+
       const userRef = doc(db, 'users', user.uid);
       const userSnap = await getDoc(userRef);
-  
+
       if (!userSnap.exists()) {
-        await createUserProfile(user.email ?? '', user.displayName ?? 'Random User', user.uid);
-        console.log('New user profile created after Google login.');
-      } else {
-        console.log('User already exists in Firestore.');
+        await createUserProfile(user.email ?? '', user.displayName ?? 'User', user.uid);
       }
-  
+
       router.push('/dashboard');
-    } catch (error) {
+    } catch (error: any) {
+      if (error.code === 'auth/popup-closed-by-user') {
+        setGoogleError('Sign-in cancelled. Please try again.');
+      } else if (error.code === 'auth/popup-blocked') {
+        setGoogleError('Popup was blocked. Please allow popups for this site.');
+      } else {
+        setGoogleError('Google sign-in failed. Please try again.');
+      }
       console.error('Error logging in with Google:', error);
     }
   };
@@ -309,6 +316,11 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
             >
               Sign in with Google
             </Button>
+            {googleError && (
+              <Typography variant="body2" color="error" sx={{ textAlign: 'center' }}>
+                {googleError}
+              </Typography>
+            )}
             <Typography sx={{ textAlign: 'center' }}>
               Don&apos;t have an account?{' '}
               <Link

@@ -5,6 +5,11 @@ import CssBaseline from '@mui/material/CssBaseline';
 import theme from '@src/theme';
 import InitColorSchemeScript from '@mui/material/InitColorSchemeScript';
 
+export const metadata = {
+  title: 'Project Pluto',
+  description: 'A personal finance tracker to manage your money with clarity and control.',
+};
+
 export default function RootLayout(props: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>

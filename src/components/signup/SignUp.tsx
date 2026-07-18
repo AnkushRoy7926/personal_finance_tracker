@@ -165,24 +165,30 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
   const googleProvider = new GoogleAuthProvider();
   const githubProvider = new GithubAuthProvider();
 
+  const [googleError, setGoogleError] = React.useState('');
+
   const googleSignUp = async () => {
+    setGoogleError('');
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
-  
+
       const userRef = doc(db, 'users', user.uid);
       const userSnap = await getDoc(userRef);
-  
-      if (!userSnap.exists()) {
-        await createUserProfile(user.email ?? '', user.displayName ?? 'Random User', user.uid);
-        console.log('New user profile created.');
-      } else {
-        console.log('User profile already exists.');
-      }
-  
-      router.push('/dashboard');
 
-    } catch (error) {
+      if (!userSnap.exists()) {
+        await createUserProfile(user.email ?? '', user.displayName ?? 'User', user.uid);
+      }
+
+      router.push('/dashboard');
+    } catch (error: any) {
+      if (error.code === 'auth/popup-closed-by-user') {
+        setGoogleError('Sign-up cancelled. Please try again.');
+      } else if (error.code === 'auth/popup-blocked') {
+        setGoogleError('Popup was blocked. Please allow popups for this site.');
+      } else {
+        setGoogleError('Google sign-up failed. Please try again.');
+      }
       console.error('Google sign-up failed:', error);
     }
   };
@@ -270,6 +276,11 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
             <Button fullWidth variant="outlined" onClick={googleSignUp} startIcon={<GoogleIcon />}>
               Sign up with Google
             </Button>
+            {googleError && (
+              <Typography variant="body2" color="error" sx={{ textAlign: 'center' }}>
+                {googleError}
+              </Typography>
+            )}
             {/* <Button fullWidth variant="outlined" onClick={githubSignUp} startIcon={<GithubIcon />}>
               Sign up with Github
             </Button> */}

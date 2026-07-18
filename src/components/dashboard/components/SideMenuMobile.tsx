@@ -12,6 +12,8 @@ import MenuContent from './MenuContent';
 import CardAlert from './CardAlert';
 import { useLogoutUser } from '@src/utils/logout';
 import { fetchUserName } from '@src/utils/fetchName';
+import { auth } from '@src/firebaseConfig';
+import { onAuthStateChanged } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 
 
@@ -23,14 +25,18 @@ interface SideMenuMobileProps {
 export default function SideMenuMobile({ open, toggleDrawer }: SideMenuMobileProps) {
 
   const [name, setName] = React.useState<string>('User');
+  const [photoURL, setPhotoURL] = React.useState<string>('');
   const router = useRouter();
   
   React.useEffect(() => {
-    const getName = async () => {
-      const fetchedName = await fetchUserName();
-      if (fetchedName) setName(fetchedName);
-    };
-    getName();
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        setPhotoURL(user.photoURL ?? '');
+        const fetchedName = await fetchUserName();
+        if (fetchedName) setName(fetchedName);
+      }
+    });
+    return () => unsubscribe();
   }, []);
 
   return (
@@ -60,9 +66,11 @@ export default function SideMenuMobile({ open, toggleDrawer }: SideMenuMobilePro
             <Avatar
               sizes="small"
               alt={name}
-              src="/static/images/avatar/7.jpg"
+              src={photoURL || undefined}
               sx={{ width: 24, height: 24 }}
-            />
+            >
+              {name.charAt(0).toUpperCase()}
+            </Avatar>
             <Typography component="p" variant="h6">
             {name}
             </Typography>

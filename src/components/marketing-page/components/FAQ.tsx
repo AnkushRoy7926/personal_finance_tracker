@@ -6,7 +6,6 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
@@ -57,7 +56,7 @@ export default function FAQ() {
             id="panel1d-header"
           >
             <Typography component="span" variant="subtitle2">
-              How do I contact customer support if I have a question or issue?
+              Is my financial data safe?
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -66,10 +65,9 @@ export default function FAQ() {
               gutterBottom
               sx={{ maxWidth: { sm: '100%', md: '70%' } }}
             >
-              You can reach our customer support team by emailing&nbsp;
-              <Link href="mailto:support@email.com">support@email.com</Link>
-              &nbsp;or calling our toll-free number. We&apos;re here to assist you
-              promptly.
+              Project Pluto uses Firebase Authentication and Firestore, so your data
+              is stored in your own Firebase project. There are no third-party
+              analytics or tracking scripts running on the site.
             </Typography>
           </AccordionDetails>
         </Accordion>
@@ -83,7 +81,7 @@ export default function FAQ() {
             id="panel2d-header"
           >
             <Typography component="span" variant="subtitle2">
-              Can I return the product if it doesn&apos;t meet my expectations?
+              Can I self-host it?
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -92,9 +90,9 @@ export default function FAQ() {
               gutterBottom
               sx={{ maxWidth: { sm: '100%', md: '70%' } }}
             >
-              Absolutely! We offer a hassle-free return policy. If you&apos;re not
-              completely satisfied, you can return the product within [number of
-              days] days for a full refund or exchange.
+              Yes. It&apos;s a standard Next.js application. Clone the repo, set up
+              your own Firebase project, add your credentials to .env.local, and run
+              it however you like.
             </Typography>
           </AccordionDetails>
         </Accordion>
@@ -108,7 +106,7 @@ export default function FAQ() {
             id="panel3d-header"
           >
             <Typography component="span" variant="subtitle2">
-              What makes your product stand out from others in the market?
+              What tech stack does it use?
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -117,9 +115,8 @@ export default function FAQ() {
               gutterBottom
               sx={{ maxWidth: { sm: '100%', md: '70%' } }}
             >
-              Our product distinguishes itself through its adaptability, durability,
-              and innovative features. We prioritize user satisfaction and
-              continually strive to exceed expectations in every aspect.
+              Next.js 15 (App Router), React 18, Material UI 6, TypeScript, and
+              Firebase (Auth + Firestore). Charts are built with MUI X Charts.
             </Typography>
           </AccordionDetails>
         </Accordion>
@@ -133,7 +130,7 @@ export default function FAQ() {
             id="panel4d-header"
           >
             <Typography component="span" variant="subtitle2">
-              Is there a warranty on the product, and what does it cover?
+              Is there a cost to use it?
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -142,10 +139,9 @@ export default function FAQ() {
               gutterBottom
               sx={{ maxWidth: { sm: '100%', md: '70%' } }}
             >
-              Yes, our product comes with a [length of warranty] warranty. It covers
-              defects in materials and workmanship. If you encounter any issues
-              covered by the warranty, please contact our customer support for
-              assistance.
+              The code is free and open. The only potential cost is your Firebase
+              hosting and Firestore usage, which has a generous free tier that
+              covers personal use.
             </Typography>
           </AccordionDetails>
         </Accordion>

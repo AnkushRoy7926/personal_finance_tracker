@@ -8,23 +8,23 @@ import {
   deleteDoc,
   getDoc,
 } from 'firebase/firestore';
+import { TransactionCategory } from '@src/utils/fetchDataFB';
 
 interface TransactionInput {
   amount: number;
   type: 'Saving' | 'Spent';
   mode: 'UPI' | 'Cash';
   description?: string;
+  category?: TransactionCategory;
   day: string;
-
 }
-
 
 /**
  * Atomically adds a transaction and updates that day's stats and user summary.
  */
 export async function addTransactionAndUpdateStats(
   uid: string,
-  { amount, type, mode, description }: TransactionInput
+  { amount, type, mode, description, category }: TransactionInput
 ) {
   const userRef = doc(db, 'users', uid);
   const now = new Date();
@@ -78,7 +78,8 @@ export async function addTransactionAndUpdateStats(
       type,
       mode,
       description: description || null,
-      day: now.toLocaleDateString('en-US', { weekday: 'long' }), 
+      category: category || 'Other',
+      day: now.toLocaleDateString('en-US', { weekday: 'long' }),
       timestamp: serverTimestamp(),
     });
 

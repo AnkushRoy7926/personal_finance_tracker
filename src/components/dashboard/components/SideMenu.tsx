@@ -13,6 +13,8 @@ import MenuContent from './MenuContent';
 import CardAlert from './CardAlert';
 import OptionsMenu from './OptionsMenu';
 import { fetchUserName } from '@src/utils/fetchName';
+import { auth } from '@src/firebaseConfig';
+import { onAuthStateChanged } from 'firebase/auth';
 
 const drawerWidth = 240;
 
@@ -29,13 +31,17 @@ const Drawer = styled(MuiDrawer)({
 
 export default function SideMenu() {
   const [name, setName] = React.useState<string>('User');
+  const [photoURL, setPhotoURL] = React.useState<string>('');
 
   React.useEffect(() => {
-    const getName = async () => {
-      const fetchedName = await fetchUserName();
-      if (fetchedName) setName(fetchedName);
-    };
-    getName();
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        setPhotoURL(user.photoURL ?? '');
+        const fetchedName = await fetchUserName();
+        if (fetchedName) setName(fetchedName);
+      }
+    });
+    return () => unsubscribe();
   }, []);
 
   return (
@@ -82,8 +88,11 @@ export default function SideMenu() {
         <Avatar
           sizes="small"
           alt={name}
+          src={photoURL || undefined}
           sx={{ width: 36, height: 36 }}
-        />
+        >
+          {name.charAt(0).toUpperCase()}
+        </Avatar>
         <Box sx={{ mr: 'auto' }}>
           <Typography variant="body2" sx={{ fontWeight: 500, lineHeight: '16px' }}>
             {name}

@@ -16,6 +16,7 @@ import TextField from '@mui/material/TextField';
 import { addTransactionAndUpdateStats } from '@src/utils/transaction';
 import { auth } from '@src/firebaseConfig';
 import { useRouter } from 'next/navigation';
+import { TRANSACTION_CATEGORIES, TransactionCategory } from '@src/utils/fetchDataFB';
 
 export default function TransactionCard() {
   const theme = useTheme();
@@ -25,22 +26,23 @@ export default function TransactionCard() {
   const [mode, setMode] = React.useState<'UPI' | 'Cash'>('UPI');
   const [amount, setAmount] = React.useState<number | ''>('');
   const [description, setDescription] = React.useState('');
+  const [category, setCategory] = React.useState<TransactionCategory>('Other');
 
   const handleTransaction = async () => {
     if (amount === '' || amount <= 0) {
       alert('Please enter a valid amount.');
       return;
     }
-    let validAmount = Math.abs(amount); 
+    let validAmount = Math.abs(amount);
     if (type === 'Spent') {
-      validAmount = -validAmount; // Ensure spent amounts are negative
+      validAmount = -validAmount;
     }
-    console.log(`Transaction: ${type}, Mode: ${mode}, Amount: ₹${amount}`);
     await addTransactionAndUpdateStats(auth.currentUser?.uid || '', {
       amount: validAmount,
       type,
       mode,
       description: description.trim() || undefined,
+      category,
     });
     router.refresh();
   };
@@ -99,6 +101,19 @@ export default function TransactionCard() {
             >
               <MenuItem value="UPI">UPI</MenuItem>
               <MenuItem value="Cash">Cash</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl size="small" fullWidth>
+            <InputLabel id="category-label">Category</InputLabel>
+            <Select
+              labelId="category-label"
+              value={category}
+              label="Category"
+              onChange={(e) => setCategory(e.target.value as TransactionCategory)}
+            >
+              {TRANSACTION_CATEGORIES.map((cat) => (
+                <MenuItem key={cat} value={cat}>{cat}</MenuItem>
+              ))}
             </Select>
           </FormControl>
           <TextField

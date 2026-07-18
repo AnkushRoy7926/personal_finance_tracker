@@ -38,7 +38,7 @@ const trans = (props: { disableCustomTheme?: boolean }) => {
       <CssBaseline enableColorScheme />
       <Box sx={{ display: 'flex' }}>
         <SideMenu />
-        <AppNavbar />
+        <AppNavbar page="Transactions" />
         <Box
           component="main"
           sx={(theme) => ({
@@ -52,7 +52,7 @@ const trans = (props: { disableCustomTheme?: boolean }) => {
             spacing={2}
             sx={{
               alignItems: 'center',
-              mx: 3,
+              mx: { xs: 1.5, sm: 3 },
               pb: 5,
               mt: { xs: 8, md: 0 },
             }}

@@ -32,7 +32,7 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
       <CssBaseline enableColorScheme />
       <Box sx={{ display: 'flex' }}>
         <SideMenu />
-        <AppNavbar />
+        <AppNavbar page="Dashboard" />
         <Box
           component="main"
           sx={(theme) => ({
