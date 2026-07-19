@@ -18,8 +18,8 @@ function groupByWeek(stats: DailyStat[]): { labels: string[]; upi: number[]; cas
   let weekStart = stats[0].date;
 
   for (let i = 0; i < stats.length; i++) {
-    weekUPI += stats[i].upi;
-    weekCash += stats[i].cash;
+    weekUPI += stats[i].upiSpent;
+    weekCash += stats[i].cashSpent;
 
     const isLast = i === stats.length - 1;
     const daysSinceStart = (new Date(stats[i].date).getTime() - new Date(weekStart).getTime()) / 86400000;
@@ -52,8 +52,8 @@ export default function PageViewsBarChart({ dailyStats, loading }: PageViewsBarC
   const theme = useTheme();
 
   const weekly = groupByWeek(dailyStats);
-  const totalUPI = sum(dailyStats.map((s) => s.upi));
-  const totalCash = sum(dailyStats.map((s) => s.cash));
+  const totalUPI = sum(dailyStats.map((s) => s.upiSpent));
+  const totalCash = sum(dailyStats.map((s) => s.cashSpent));
   const grandTotal = totalUPI + totalCash;
   const upiPct = grandTotal > 0 ? ((totalUPI / grandTotal) * 100).toFixed(0) : '0';
 

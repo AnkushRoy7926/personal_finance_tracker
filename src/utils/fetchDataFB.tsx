@@ -44,6 +44,8 @@ export interface DailyStat {
   balance: number;
   upi: number;
   cash: number;
+  upiSpent: number;
+  cashSpent: number;
 }
 
 function getDateNDaysAgo(n: number): Date {
@@ -89,6 +91,8 @@ export async function fetchUserSummary(
         balance: data.balance,
         upi: data.upi,
         cash: data.cash,
+        upiSpent: data.upiSpent ?? 0,
+        cashSpent: data.cashSpent ?? 0,
       });
     });
 
@@ -116,6 +120,8 @@ export async function fetchUserSummary(
           balance: lastBalance,
           upi: lastUPI,
           cash: lastCash,
+          upiSpent: 0,
+          cashSpent: 0,
         });
       }
     }

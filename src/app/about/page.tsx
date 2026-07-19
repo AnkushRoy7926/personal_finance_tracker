@@ -10,14 +10,14 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
+import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
-import AccountBalanceRoundedIcon from '@mui/icons-material/AccountBalanceRounded';
-import InsightsRoundedIcon from '@mui/icons-material/InsightsRounded';
-import ShieldRoundedIcon from '@mui/icons-material/ShieldRounded';
-import CodeRoundedIcon from '@mui/icons-material/CodeRounded';
 import GitHubIcon from '@mui/icons-material/GitHub';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import EmailIcon from '@mui/icons-material/Email';
+import ArticleIcon from '@mui/icons-material/Article';
+import LanguageIcon from '@mui/icons-material/Language';
 
 import AppNavbar from '@src/components/dashboard/components/AppNavbar';
 import Header from '@src/components/dashboard/components/Header';
@@ -37,31 +37,52 @@ const xThemeComponents = {
   ...treeViewCustomizations,
 };
 
-const techStack = [
-  'Next.js', 'React', 'TypeScript', 'Material UI',
-  'Firebase', 'Firestore', 'Vercel',
+const languages = ['Python', 'C++', 'JavaScript', 'TypeScript', 'Dart', 'HTML', 'CSS'];
+
+const frameworks = [
+  'Next.js', 'React', 'TensorFlow', 'Flask', 'Flutter',
+  'Firebase', 'Material UI', 'Git', 'Linux',
 ];
 
 const highlights = [
   {
-    icon: <AccountBalanceRoundedIcon />,
-    title: 'Transaction Tracking',
-    description: 'Log income and expenses with category, payment mode, and description. Supports UPI and Cash breakdowns.',
+    title: 'AI & Machine Learning',
+    description: 'Building neural networks, logistic regression, and recommendation systems from scratch to truly understand how they work.',
   },
   {
-    icon: <InsightsRoundedIcon />,
-    title: 'AI Financial Insights',
-    description: 'Get a health score, detect spending anomalies, identify recurring payments, and receive personalized recommendations.',
+    title: 'Systems Programming',
+    description: 'From custom shells in C++ to low-level implementations, diving deep into how computers really work.',
   },
   {
-    icon: <ShieldRoundedIcon />,
-    title: 'Your Data, Your Device',
-    description: 'All data lives in your personal Firebase project. No third-party servers, no data sharing, no tracking.',
+    title: 'Web Development',
+    description: 'Full-stack projects with modern frameworks like Next.js and Flask, turning ideas into real applications.',
   },
   {
-    icon: <CodeRoundedIcon />,
-    title: 'Open & Extensible',
-    description: 'Built with modern web technologies. Clean architecture that\'s easy to understand, modify, and deploy.',
+    title: 'Open Source',
+    description: 'Actively contributing to projects and collaborating with the developer community. Pull Shark on GitHub.',
+  },
+];
+
+const projects = [
+  {
+    name: 'Neural Network from Scratch',
+    description: 'Python implementation of a neural network for educational purposes — forward/backpropagation, activation functions, and gradient descent, all without ML libraries.',
+    tech: ['Python', 'NumPy'],
+  },
+  {
+    name: 'Linear & Logistic Regression from Scratch',
+    description: 'Custom implementations of core ML algorithms in both Python and C++, with gradient descent optimization.',
+    tech: ['Python', 'C++'],
+  },
+  {
+    name: 'Movie Recommendation System',
+    description: 'KNN-based movie recommendation engine built on the MovieLens dataset.',
+    tech: ['Python', 'KNN'],
+  },
+  {
+    name: 'Custom Shell in C++',
+    description: 'A terminal emulator built from scratch — builtins, piping, scripting support, and more.',
+    tech: ['C++', 'Linux'],
   },
 ];
 
@@ -93,19 +114,14 @@ function AboutContent(props: { disableCustomTheme?: boolean }) {
             <Header page="About" />
 
             {/* Hero */}
-            <Box sx={{ textAlign: 'center' }}>
-              <Typography
-                variant="h1"
-                sx={{
-                  display: 'flex',
-                  flexDirection: { xs: 'column', sm: 'row' },
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: 'clamp(2rem, 6vw, 3rem)',
-                  mb: 2,
-                }}
-              >
-                Project&nbsp;
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+              <Avatar
+                src="https://avatars.githubusercontent.com/u/97963983?v=4"
+                alt="Ankush Roy"
+                sx={{ width: 120, height: 120, mb: 2, border: '3px solid', borderColor: 'primary.main' }}
+              />
+              <Typography variant="h1" sx={{ fontSize: 'clamp(2rem, 6vw, 3rem)', mb: 1 }}>
+                Ankush{' '}
                 <Typography
                   component="span"
                   variant="h1"
@@ -115,22 +131,72 @@ function AboutContent(props: { disableCustomTheme?: boolean }) {
                     ...theme.applyStyles('dark', { color: 'primary.light' }),
                   })}
                 >
-                  Pluto
+                  Roy
                 </Typography>
               </Typography>
-              <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 560, mx: 'auto', lineHeight: 1.7 }}>
-                A personal finance tracker built for one person: you. Log transactions,
-                see where your money goes, and stay in control without the bloat of
-                enterprise software.
+              <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 560, lineHeight: 1.7 }}>
+                Software developer from India passionate about AI, systems programming, and building
+                things with code. Currently exploring machine learning and implementing algorithms from
+                scratch.
               </Typography>
+              <Stack direction="row" spacing={1} sx={{ mt: 2 }}>
+                <IconButton
+                  component={Link}
+                  href="https://github.com/AnkushRoy7926"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="GitHub"
+                  color="primary"
+                >
+                  <GitHubIcon />
+                </IconButton>
+                <IconButton
+                  component={Link}
+                  href="https://www.linkedin.com/in/ankush-roy-7926ar/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="LinkedIn"
+                  color="primary"
+                >
+                  <LinkedInIcon />
+                </IconButton>
+                <IconButton
+                  component={Link}
+                  href="https://medium.com/@ankushroy7"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Medium blog"
+                  color="primary"
+                >
+                  <ArticleIcon />
+                </IconButton>
+                <IconButton
+                  component={Link}
+                  href="https://ankushroy.vercel.app"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Personal website"
+                  color="primary"
+                >
+                  <LanguageIcon />
+                </IconButton>
+                <IconButton
+                  component={Link}
+                  href="mailto:ankushroy7926@outlook.com"
+                  aria-label="Send email"
+                  color="primary"
+                >
+                  <EmailIcon />
+                </IconButton>
+              </Stack>
             </Box>
 
             <Divider />
 
-            {/* Highlights */}
+            {/* What I Do */}
             <Box>
               <Typography variant="h2" sx={{ mb: 3, fontSize: 'clamp(1.5rem, 3vw, 1.75rem)' }}>
-                What it does
+                What I do
               </Typography>
               <Box
                 sx={{
@@ -141,11 +207,8 @@ function AboutContent(props: { disableCustomTheme?: boolean }) {
               >
                 {highlights.map((item) => (
                   <Card key={item.title} variant="outlined" sx={{ height: '100%' }}>
-                    <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                      <Box sx={{ color: 'primary.main', display: 'flex' }}>
-                        {item.icon}
-                      </Box>
-                      <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                    <CardContent>
+                      <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
                         {item.title}
                       </Typography>
                       <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.65 }}>
@@ -159,27 +222,67 @@ function AboutContent(props: { disableCustomTheme?: boolean }) {
 
             <Divider />
 
+            {/* Featured Projects */}
+            <Box>
+              <Typography variant="h2" sx={{ mb: 3, fontSize: 'clamp(1.5rem, 3vw, 1.75rem)' }}>
+                Featured projects
+              </Typography>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                {projects.map((project) => (
+                  <Card key={project.name} variant="outlined">
+                    <CardContent>
+                      <Typography variant="h6" sx={{ fontWeight: 600, mb: 0.5 }}>
+                        {project.name}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5, lineHeight: 1.65 }}>
+                        {project.description}
+                      </Typography>
+                      <Stack direction="row" spacing={0.5} flexWrap="wrap" useFlexGap>
+                        {project.tech.map((t) => (
+                          <Chip key={t} label={t} size="small" variant="outlined" />
+                        ))}
+                      </Stack>
+                    </CardContent>
+                  </Card>
+                ))}
+              </Box>
+            </Box>
+
+            <Divider />
+
             {/* Tech Stack */}
             <Box>
               <Typography variant="h2" sx={{ mb: 2, fontSize: 'clamp(1.5rem, 3vw, 1.75rem)' }}>
-                Built with
+                Languages
+              </Typography>
+              <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap sx={{ mb: 3 }}>
+                {languages.map((lang) => (
+                  <Chip key={lang} label={lang} variant="outlined" />
+                ))}
+              </Stack>
+
+              <Typography variant="h2" sx={{ mb: 2, fontSize: 'clamp(1.5rem, 3vw, 1.75rem)' }}>
+                Frameworks &amp; tools
               </Typography>
               <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-                {techStack.map((tech) => (
-                  <Chip key={tech} label={tech} variant="outlined" />
+                {frameworks.map((fw) => (
+                  <Chip key={fw} label={fw} variant="outlined" />
                 ))}
               </Stack>
             </Box>
 
             <Divider />
 
-            {/* Contact */}
+            {/* This Project */}
             <Box>
               <Typography variant="h2" sx={{ mb: 2, fontSize: 'clamp(1.5rem, 3vw, 1.75rem)' }}>
-                Get in touch
+                About this project
               </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 2, lineHeight: 1.65 }}>
-                Have feedback, found a bug, or want to contribute? Reach out on GitHub or drop an email.
+              <Typography variant="body1" color="text.secondary" sx={{ lineHeight: 1.7, mb: 2 }}>
+                <strong>Project Pluto</strong> is a personal finance tracker built to keep things simple.
+                No enterprise bloat — just a clean way to log transactions, track spending by category
+                and payment mode, and get AI-powered insights on where your money goes. Built with
+                Next.js, Material UI, and Firebase.
               </Typography>
               <Stack direction="row" spacing={1}>
                 <IconButton
@@ -187,18 +290,10 @@ function AboutContent(props: { disableCustomTheme?: boolean }) {
                   href="https://github.com/AnkushRoy7926/personal_finance_tracker"
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="GitHub repository"
+                  aria-label="Project source code"
                   color="primary"
                 >
                   <GitHubIcon />
-                </IconButton>
-                <IconButton
-                  component={Link}
-                  href="mailto:ankushroy7926@outlook.com"
-                  aria-label="Send email"
-                  color="primary"
-                >
-                  <EmailIcon />
                 </IconButton>
               </Stack>
             </Box>

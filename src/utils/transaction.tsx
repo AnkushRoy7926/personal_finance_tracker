@@ -52,6 +52,8 @@ export async function addTransactionAndUpdateStats(
       balance: rawStats.balance ?? 0,
       upi: rawStats.upi ?? 0,
       cash: rawStats.cash ?? 0,
+      upiSpent: rawStats.upiSpent ?? 0,
+      cashSpent: rawStats.cashSpent ?? 0,
     };
 
     // 3) Compute new values
@@ -61,9 +63,8 @@ export async function addTransactionAndUpdateStats(
 
     const added = prev.added + (amount > 0 ? amount : 0);
     const spent = prev.spent + (amount < 0 ? Math.abs(amount) : 0);
-    // const balance = prev.balance + amount;
-    // const newDailyUPI = mode === 'UPI' ? prev.upi + amount : prev.upi;
-    // const newDailyCash = mode === 'Cash' ? prev.cash + amount : prev.cash;
+    const upiSpent = prev.upiSpent + (amount < 0 && mode === 'UPI' ? Math.abs(amount) : 0);
+    const cashSpent = prev.cashSpent + (amount < 0 && mode === 'Cash' ? Math.abs(amount) : 0);
 
     // 4) Perform writes
     tx.update(userRef, {
@@ -90,6 +91,8 @@ export async function addTransactionAndUpdateStats(
       balance: newTotalBalance,
       upi: newUPI,
       cash: newCash,
+      upiSpent,
+      cashSpent,
     });
   });
 }
@@ -135,6 +138,8 @@ export async function deleteTransactionAndUpdateStats(
       balance: rawStats.balance ?? 0,
       upi: rawStats.upi ?? 0,
       cash: rawStats.cash ?? 0,
+      upiSpent: rawStats.upiSpent ?? 0,
+      cashSpent: rawStats.cashSpent ?? 0,
     };
 
     const userSnap = await tx.get(userRef);
@@ -155,6 +160,8 @@ export async function deleteTransactionAndUpdateStats(
     const newBalance = prevStats.balance - amount;
     const newDailyUPI = mode === 'UPI' ? prevStats.upi - amount : prevStats.upi;
     const newDailyCash = mode === 'Cash' ? prevStats.cash - amount : prevStats.cash;
+    const newUpiSpent = Math.max(0, prevStats.upiSpent - (amount < 0 && mode === 'UPI' ? Math.abs(amount) : 0));
+    const newCashSpent = Math.max(0, prevStats.cashSpent - (amount < 0 && mode === 'Cash' ? Math.abs(amount) : 0));
 
     tx.set(statsRef, {
       date: dateStr,
@@ -163,6 +170,8 @@ export async function deleteTransactionAndUpdateStats(
       balance: newBalance,
       upi: newDailyUPI,
       cash: newDailyCash,
+      upiSpent: newUpiSpent,
+      cashSpent: newCashSpent,
     });
 
     // 5) Update user-level fields
