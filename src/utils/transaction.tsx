@@ -16,7 +16,7 @@ interface TransactionInput {
   mode: 'UPI' | 'Cash';
   description?: string;
   category?: TransactionCategory;
-  day: string;
+  day?: string;
 }
 
 /**

@@ -13,13 +13,14 @@ import Copyright from '../internals/components/Copyright';
 import ChartUserByCountry from './ChartUserByCountry';
 import FillUpCard from './FillUpCard';
 import CustomizedDataGrid from './CustomizedDataGrid';
-import HighlightedCard from './HighlightedCard';
 import PageViewsBarChart from './PageViewsBarChart';
 import SessionsChart from './SessionsChart';
 import DayOfWeekChart from './DayOfWeekChart';
 import MonthlyComparisonCard from './MonthlyComparisonCard';
 import SpendingVelocityCard from './SpendingVelocityCard';
 import CategoryBreakdownChart from './CategoryBreakdownChart';
+import SpendHeatmap from './SpendHeatmap';
+import QuickAddFAB from './QuickAddFAB';
 import BudgetGoalsCard from './BudgetGoalsCard';
 import SavingsGoalsCard from './SavingsGoalsCard';
 import ExportButton from './ExportButton';
@@ -255,6 +256,9 @@ export default function MainGrid() {
         <Grid size={{ xs: 12, md: 6 }}>
           <CategoryBreakdownChart data={categoryData} loading={loading} />
         </Grid>
+        <Grid size={{ xs: 12 }}>
+          <SpendHeatmap dailyStats={dailyStats} loading={loading} />
+        </Grid>
       </Grid>
 
       <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
@@ -281,11 +285,12 @@ export default function MainGrid() {
         </Grid>
         <Grid size={{ xs: 12, lg: 3 }}>
           <Stack gap={2} direction={{ xs: 'column', sm: 'row', lg: 'column' }}>
-            <HighlightedCard />
             <ChartUserByCountry dailyStats={dailyStats} loading={loading} />
           </Stack>
         </Grid>
       </Grid>
+
+      <QuickAddFAB />
 
       <Copyright sx={{ my: 4 }} />
     </Box>
